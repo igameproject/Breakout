@@ -7,13 +7,13 @@ const PADDLE_WIDTH = 95;
 const PADDLE_HEIGHT = 15;
 var paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
 const PADDLE_Y = canvas.height - PADDLE_HEIGHT - 10;;
-const PADDLE_XV = 25;
+const PADDLE_XV = 30;
 var score = 0;
 
 //Ball Properties
 const BALL_DIA = 20;
-var ball_XV = 10;
-var ball_YV = -10;
+var ball_XV = 5;
+var ball_YV = -5;
 var ball_Y = PADDLE_Y - BALL_DIA/2 ;
 var ball_X = paddle_X + PADDLE_WIDTH/2;
 
@@ -73,7 +73,10 @@ window.onload = () => {
 
 
   document.addEventListener('mousedown',function(evt){
-   
+    if( ball_XV == 0 && ball_YV == 0){
+       ball_XV = 5; 
+        ball_YV = -5;
+    }
   });
   
   var framesPerSecond = 60;
@@ -91,13 +94,13 @@ var mainGame = () => {
   ctx.fillRect(paddle_X,PADDLE_Y,PADDLE_WIDTH,PADDLE_HEIGHT);
 
   ctx.fillStyle = "#1eddff"
-
+  //bricks display
   coordinates.forEach(function(elem){
     ctx.fillRect(elem.x,elem.y,BRICK_WIDTH,BRICK_HEIGHT);
   })
   
   ctx.fillStyle = "white"
-  updateBallPosition();
+  updateBallPosition(); 
   ctx.beginPath();
   ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
   ctx.fill();
@@ -112,9 +115,37 @@ var updateBallPosition = () =>{
   ball_Y += ball_YV;
   ball_X += ball_XV;
   if(ball_X > canvas.width || ball_X < 0)
-    ball_XV = -ball_XV;  
-  if(ball_Y > canvas.height || ball_Y < 0){
+    ball_XV = -ball_XV; 
+
+  if( ball_Y < 0){
     ball_YV = -ball_YV;
   }
 
+  if(ball_Y > canvas.height - PADDLE_HEIGHT -10 && ball_X > paddle_X && ball_X < paddle_X + PADDLE_WIDTH ){
+        
+        //touches left half of paddle
+        if(ball_X > paddle_X && ball_X < PADDLE_WIDTH/2 ){
+          ball_XV = -5; 
+          ball_YV = -ball_YV;
+        }
+        if(ball_X < paddle_X + PADDLE_WIDTH && ball_X > PADDLE_WIDTH/2 ){
+          ball_XV = 5; 
+          ball_YV = -ball_YV;
+        }
+        if(ball_X > PADDLE_WIDTH - 5 && ball_X < PADDLE_WIDTH + 5 ){
+          ball_XV = 0; 
+          ball_YV = -ball_YV;
+        }
+  }
+
+  if(ball_Y > canvas.height){
+     
+     
+        ball_Y = PADDLE_Y - BALL_DIA/2 ;
+        ball_X = paddle_X + PADDLE_WIDTH/2;
+        ball_XV = 0; 
+        ball_YV = 0;
+     
+
+  }
 }
