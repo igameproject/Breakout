@@ -7,7 +7,7 @@ const PADDLE_WIDTH = 95;
 const PADDLE_HEIGHT = 15;
 var paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
 const PADDLE_Y = canvas.height - PADDLE_HEIGHT - 10;;
-const PADDLE_XV = 12;
+const PADDLE_XV = 18;
 var score = 0;
 
 //Ball Properties
@@ -82,9 +82,6 @@ window.onload = () => {
     if(gameOver == true){
        gameReset();
     }
-     
-   
-
 
   });
   
@@ -107,8 +104,11 @@ var mainGame = () => {
       ctx.fillStyle = "#1eddff"
       //bricks display
       coordinates.forEach(function(elem,index){
-        if(checkBrickBallCollision(elem))
-          coordinates.splice(index,1)
+        if(checkBrickBallCollision(elem)){
+          coordinates.splice(index,1);
+          ball_XV = ball_XV; 
+          ball_YV = -ball_YV;   
+        }
         else
           ctx.fillRect(elem.x,elem.y,BRICK_WIDTH,BRICK_HEIGHT);
 
