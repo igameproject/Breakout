@@ -17,6 +17,9 @@ let ball_YV = -5;
 let ball_Y = PADDLE_Y - BALL_DIA/2 ;
 let ball_X = paddle_X + PADDLE_WIDTH/2;
 
+//ball connected to player paddle
+let ballplayerconnect = true;
+
 let gameOver = false; 
 let status;
 //Bricks
@@ -64,13 +67,19 @@ window.onload = () => {
         if(paddle_X  > 0){
           paddle_X -= PADDLE_XV;  
         }
-              
       }
       if(evt.code === "ArrowRight"){
         if(paddle_X + PADDLE_WIDTH  < canvas.width){
           paddle_X += PADDLE_XV; 
         }
       }
+	  if(evt.code === "Space"){
+		  if(ballplayerconnect){
+			ballplayerconnect = false;
+			ball_XV = -5;
+			ball_YV = -5;
+		  }
+	  }
   });
 
 
@@ -169,47 +178,51 @@ let gameReset = () => {
     ball_Y = PADDLE_Y - BALL_DIA/2 ;
     ball_X = paddle_X + PADDLE_WIDTH/2;
     gameOver = false;
-
+	ballplayerconnect = true;
 } //gameReset
 
 let updateBallPosition = () => {
+  if(ballplayerconnect){
+	  ball_Y = PADDLE_Y - 10;
+	  ball_X = paddle_X + (PADDLE_WIDTH/2);
+  } else {
+	  ball_Y += ball_YV;
+	  ball_X += ball_XV;
 
-  ball_Y += ball_YV;
-  ball_X += ball_XV;
+	  if(ball_X > canvas.width || ball_X < 0)
+		ball_XV = -ball_XV; 
 
-  if(ball_X > canvas.width || ball_X < 0)
-    ball_XV = -ball_XV; 
+	  if(ball_Y < 0){
+		ball_YV = -ball_YV;
+	  }
 
-  if(ball_Y < 0){
-    ball_YV = -ball_YV;
-  }
+	  if(ball_Y > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){
+			if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
+				ball_YV = -ball_YV;
+			}
+			//touches left half of paddle
+			// if(ball_X > paddle_X && ball_X < PADDLE_WIDTH/2 ){
+			//   ball_XV = -5; 
+			//   ball_YV = -ball_YV;
+			// }
+			// if(ball_X < paddle_X + PADDLE_WIDTH && ball_X > PADDLE_WIDTH/2 ){
+			//   ball_XV = 5; 
+			//   ball_YV = -ball_YV;
+			// }
+			// if(ball_X > PADDLE_WIDTH - 5 && ball_X < PADDLE_WIDTH + 5 ){
+			//   ball_XV = 0; 
+			//   ball_YV = -ball_YV;
+			// }
+	  }
 
-  if(ball_Y > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){
-        if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
-            ball_YV = -ball_YV;
-        }
-        //touches left half of paddle
-        // if(ball_X > paddle_X && ball_X < PADDLE_WIDTH/2 ){
-        //   ball_XV = -5; 
-        //   ball_YV = -ball_YV;
-        // }
-        // if(ball_X < paddle_X + PADDLE_WIDTH && ball_X > PADDLE_WIDTH/2 ){
-        //   ball_XV = 5; 
-        //   ball_YV = -ball_YV;
-        // }
-        // if(ball_X > PADDLE_WIDTH - 5 && ball_X < PADDLE_WIDTH + 5 ){
-        //   ball_XV = 0; 
-        //   ball_YV = -ball_YV;
-        // }
-  }
-
-  if(ball_Y > canvas.height){
-        // ball_Y = PADDLE_Y - BALL_DIA/2 ;
-        // ball_X = paddle_X + PADDLE_WIDTH/2;
-        // ball_XV = 0; 
-        // ball_YV = 0;
-        gameOver = true;
-        status = "You are Dead";
+	  if(ball_Y > canvas.height){
+			// ball_Y = PADDLE_Y - BALL_DIA/2 ;
+			// ball_X = paddle_X + PADDLE_WIDTH/2;
+			// ball_XV = 0; 
+			// ball_YV = 0;
+			gameOver = true;
+			status = "You are Dead";
+	  }
   }
 }
 
