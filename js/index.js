@@ -17,6 +17,9 @@ let ball_YV = -5;
 let ball_Y = PADDLE_Y - BALL_DIA/2 ;
 let ball_X = paddle_X + PADDLE_WIDTH/2;
 
+// Lives
+let numLives = 3;
+
 let gameOver = false; 
 let status;
 //Bricks
@@ -80,7 +83,7 @@ window.onload = () => {
     //     ball_YV = -5;
     // }
     if(gameOver == true){
-       gameReset();
+       gameOverReset();
     }
 
   });
@@ -120,6 +123,9 @@ var mainGame = () => {
       ctx.beginPath();
       ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
       ctx.fill();
+      ctx.fillStyle = "white";
+      ctx.font="20px Arial";
+      ctx.fillText("Lives : " + numLives, 10 ,350);
   }
 
   else {
@@ -134,7 +140,18 @@ var mainGame = () => {
   }
 } //main game
 
+// reset game with previous info
 let gameReset = () => {
+  paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
+  ball_XV = -5;
+  ball_YV = -5;
+  ball_Y = PADDLE_Y - BALL_DIA/2 ;
+  ball_X = paddle_X + PADDLE_WIDTH/2;
+  gameOver = false;
+
+}
+
+let gameOverReset = () => {
     coordinates = [{x : 30 , y : 30 },
                    {x : 110 , y : 30 },
                    {x : 190 , y : 30 },
@@ -169,22 +186,23 @@ let gameReset = () => {
     ball_Y = PADDLE_Y - BALL_DIA/2 ;
     ball_X = paddle_X + PADDLE_WIDTH/2;
     gameOver = false;
+    numLives=3;
 
-} //gameReset
+} //gameOverReset
 
 let updateBallPosition = () => {
 
   ball_Y += ball_YV;
   ball_X += ball_XV;
 
-  if(ball_X > canvas.width || ball_X < 0)
+  if(ball_X >= canvas.width || ball_X <= 0)
     ball_XV = -ball_XV; 
 
-  if(ball_Y < 0){
+  if(ball_Y <= 0){
     ball_YV = -ball_YV;
   }
 
-  if(ball_Y > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){
+  if(ball_Y > canvas.height - (PADDLE_HEIGHT + 25) && ball_Y < canvas.height){
         if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
             ball_YV = -ball_YV;
         }
@@ -208,10 +226,18 @@ let updateBallPosition = () => {
         // ball_X = paddle_X + PADDLE_WIDTH/2;
         // ball_XV = 0; 
         // ball_YV = 0;
-        gameOver = true;
-        status = "You are Dead";
+
+        if(numLives > 1){
+          numLives--;
+          // reset game 
+          gameReset();
+        }else{
+          gameOver = true;
+          status = "You are Dead";
+        }
   }
 }
+
 
 let checkBrickBallCollision = (brick) => {
     let brickBox = {
