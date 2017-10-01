@@ -19,6 +19,6 @@ You control a small platform using the left and right arrow keys. You goal is to
 
 You win when there are no more blocks to destroy.
 
-You lose when you let the ball fall.
+You have maximum of three lives, you lose a life when you let the ball fall off the screen and lose the game when you lose all lives.
 
 ![how-to-play](assets/how-to-play.jpg)
