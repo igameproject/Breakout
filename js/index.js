@@ -123,9 +123,9 @@ var mainGame = () => {
       ctx.beginPath();
       ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
       ctx.fill();
-      ctx.fillStyle = "white";
-      ctx.font="20px Arial";
-      ctx.fillText("Lives : " + numLives, 10 ,350);
+      ctx.fillStyle = "black";
+      ctx.font="16px Arial";
+      ctx.fillText("Lives : " + numLives, paddle_X + (PADDLE_WIDTH/6) , PADDLE_Y + PADDLE_HEIGHT - 2); // set type on paddle
   }
 
   else {
@@ -141,14 +141,13 @@ var mainGame = () => {
 } //main game
 
 // reset game with previous info
-let gameReset = () => {
+let lifeLossReset = () => {
   paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
   ball_XV = -5;
   ball_YV = -5;
   ball_Y = PADDLE_Y - BALL_DIA/2 ;
   ball_X = paddle_X + PADDLE_WIDTH/2;
-  gameOver = false;
-
+  gameOver = false;  
 }
 
 let gameOverReset = () => {
@@ -191,18 +190,17 @@ let gameOverReset = () => {
 } //gameOverReset
 
 let updateBallPosition = () => {
-
   ball_Y += ball_YV;
   ball_X += ball_XV;
 
-  if(ball_X >= canvas.width || ball_X <= 0)
+  if(ball_X > canvas.width || ball_X < 0)
     ball_XV = -ball_XV; 
 
-  if(ball_Y <= 0){
+  if(ball_Y < 0){
     ball_YV = -ball_YV;
   }
 
-  if(ball_Y > canvas.height - (PADDLE_HEIGHT + 25) && ball_Y < canvas.height){
+  if(ball_Y > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){
         if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
             ball_YV = -ball_YV;
         }
@@ -226,11 +224,10 @@ let updateBallPosition = () => {
         // ball_X = paddle_X + PADDLE_WIDTH/2;
         // ball_XV = 0; 
         // ball_YV = 0;
-
         if(numLives > 1){
           numLives--;
+          lifeLossReset();
           // reset game 
-          gameReset();
         }else{
           gameOver = true;
           status = "You are Dead";
@@ -238,9 +235,8 @@ let updateBallPosition = () => {
   }
 }
 
-
 let checkBrickBallCollision = (brick) => {
-    let brickBox = {
+  let brickBox = {
     x:brick.x + BRICK_WIDTH/2,
     y:brick.y + BRICK_HEIGHT/2,
     width: BRICK_WIDTH,
@@ -257,8 +253,8 @@ let checkBrickBallCollision = (brick) => {
 };
 
 let testCollisionRect = (rect1,rect2) => {
-  return rect1.x <= rect2.x + rect2.width
-    && rect2.x <= rect1.x + rect1.width
-    && rect1.y <= rect2.y + rect2.height
-    && rect2.y <= rect1.y + rect1.height;
+return rect1.x <= rect2.x + rect2.width
+  && rect2.x <= rect1.x + rect1.width
+  && rect1.y <= rect2.y + rect2.height
+  && rect2.y <= rect1.y + rect1.height;
 };
