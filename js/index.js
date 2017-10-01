@@ -7,7 +7,7 @@ const PADDLE_WIDTH = 95;
 const PADDLE_HEIGHT = 15;
 let paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
 const PADDLE_Y = canvas.height - PADDLE_HEIGHT - 10;;
-const PADDLE_XV = 18;
+const PADDLE_XV = 10;
 let score = 0;
 
 //Ball Properties
@@ -19,6 +19,9 @@ let ball_X = paddle_X + PADDLE_WIDTH/2;
 
 //ball connected to player paddle
 let ballplayerconnect = true;
+// Lives
+let numLives = 3;
+
 
 let gameOver = false; 
 let status;
@@ -59,37 +62,49 @@ let coordinates = [{x : 30 , y : 30 },
 ];
 
 
+var heldKeys = {}
 
-window.onload = () => {
+var addHoldKeyListener = (keyname) => {
 
   document.addEventListener('keydown',function(evt){
-      if(evt.code === "ArrowLeft"){
-        if(paddle_X  > 0){
-          paddle_X -= PADDLE_XV;  
-        }
+      if(evt.code === keyname){
+        heldKeys[keyname] = true;
       }
-      if(evt.code === "ArrowRight"){
-        if(paddle_X + PADDLE_WIDTH  < canvas.width){
-          paddle_X += PADDLE_XV; 
-        }
+	});
+
+  document.addEventListener('keyup',function(evt){
+      if(evt.code === keyname){
+        heldKeys[keyname] = false;   
       }
 	  if(evt.code === "Space"){
 		  if(ballplayerconnect){
 			ballplayerconnect = false;
-			ball_XV = -5;
-			ball_YV = -5;
+			if(heldKeys['ArrowLeft'] == true){
+				ball_XV = -5;
+			}
+			else if(heldKeys['ArrowRight'] == true){
+				ball_XV = 5;
+			}
+			else{
+				ball_YV = -5;
+			}
 		  }
 	  }
   });
+}
 
+window.onload = () => {
 
+  addHoldKeyListener('ArrowLeft')
+  addHoldKeyListener('ArrowRight')
+  
   document.addEventListener('mousedown',function(evt){
     // if( ball_XV == 0 && ball_YV == 0){
     //    ball_XV = 5; 
     //     ball_YV = -5;
     // }
     if(gameOver == true){
-       gameReset();
+       gameOverReset();
     }
 
   });
@@ -101,9 +116,11 @@ window.onload = () => {
 }; //initializing function
 
 
-var mainGame = () => {
+let mainGame = () => {
 
   if(!gameOver){
+
+      updatePaddlePosition();
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "white";
@@ -129,6 +146,9 @@ var mainGame = () => {
       ctx.beginPath();
       ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
       ctx.fill();
+      ctx.fillStyle = "black";
+      ctx.font="16px Arial";
+      ctx.fillText("Lives : " + numLives, paddle_X + (PADDLE_WIDTH/6) , PADDLE_Y + PADDLE_HEIGHT - 2); // set type on paddle
   }
 
   else {
@@ -143,7 +163,17 @@ var mainGame = () => {
   }
 } //main game
 
-let gameReset = () => {
+// reset game with previous info
+let lifeLossReset = () => {
+  //paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
+  ball_XV = -5;
+  ball_YV = -5;
+  ball_Y = PADDLE_Y - BALL_DIA/2 ;
+  ball_X = paddle_X + PADDLE_WIDTH/2;
+  gameOver = false;  
+}
+
+let gameOverReset = () => {
     coordinates = [{x : 30 , y : 30 },
                    {x : 110 , y : 30 },
                    {x : 190 , y : 30 },
@@ -178,56 +208,74 @@ let gameReset = () => {
     ball_Y = PADDLE_Y - BALL_DIA/2 ;
     ball_X = paddle_X + PADDLE_WIDTH/2;
     gameOver = false;
-	ballplayerconnect = true;
+	  ballplayerconnect = true;
 } //gameReset
+
+let updatePaddlePosition = () => {
+
+  if (heldKeys['ArrowLeft'] && paddle_X > 0){
+    paddle_X -= PADDLE_XV;  
+  }
+
+  if (heldKeys['ArrowRight'] && paddle_X + PADDLE_WIDTH < canvas.width){
+    paddle_X += PADDLE_XV;  
+  }
+}
 
 let updateBallPosition = () => {
   if(ballplayerconnect){
 	  ball_Y = PADDLE_Y - 10;
 	  ball_X = paddle_X + (PADDLE_WIDTH/2);
   } else {
-	  ball_Y += ball_YV;
-	  ball_X += ball_XV;
+  ball_Y += ball_YV;
+  ball_X += ball_XV;
 
-	  if(ball_X > canvas.width || ball_X < 0)
-		ball_XV = -ball_XV; 
+  if(ball_X > canvas.width || ball_X < 0)
+    ball_XV = -ball_XV; 
 
-	  if(ball_Y < 0){
-		ball_YV = -ball_YV;
-	  }
+  if(ball_Y < 0){
+    ball_YV = -ball_YV;
+  }
 
-	  if(ball_Y > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){
-			if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
-				ball_YV = -ball_YV;
-			}
-			//touches left half of paddle
-			// if(ball_X > paddle_X && ball_X < PADDLE_WIDTH/2 ){
-			//   ball_XV = -5; 
-			//   ball_YV = -ball_YV;
-			// }
-			// if(ball_X < paddle_X + PADDLE_WIDTH && ball_X > PADDLE_WIDTH/2 ){
-			//   ball_XV = 5; 
-			//   ball_YV = -ball_YV;
-			// }
-			// if(ball_X > PADDLE_WIDTH - 5 && ball_X < PADDLE_WIDTH + 5 ){
-			//   ball_XV = 0; 
-			//   ball_YV = -ball_YV;
-			// }
-	  }
+  if(ball_Y > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){
+        if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
+            ball_YV = -ball_YV;
+        }
+        //touches left half of paddle
+        // if(ball_X > paddle_X && ball_X < PADDLE_WIDTH/2 ){
+        //   ball_XV = -5; 
+        //   ball_YV = -ball_YV;
+        // }
+        // if(ball_X < paddle_X + PADDLE_WIDTH && ball_X > PADDLE_WIDTH/2 ){
+        //   ball_XV = 5; 
+        //   ball_YV = -ball_YV;
+        // }
+        // if(ball_X > PADDLE_WIDTH - 5 && ball_X < PADDLE_WIDTH + 5 ){
+        //   ball_XV = 0; 
+        //   ball_YV = -ball_YV;
+        // }
+  }
 
-	  if(ball_Y > canvas.height){
-			// ball_Y = PADDLE_Y - BALL_DIA/2 ;
-			// ball_X = paddle_X + PADDLE_WIDTH/2;
-			// ball_XV = 0; 
-			// ball_YV = 0;
-			gameOver = true;
-			status = "You are Dead";
-	  }
+  if(ball_Y > canvas.height){
+        // ball_Y = PADDLE_Y - BALL_DIA/2 ;
+        // ball_X = paddle_X + PADDLE_WIDTH/2;
+        // ball_XV = 0; 
+        // ball_YV = 0;
+        if(numLives > 1){
+          numLives--;
+          lifeLossReset();
+		  ballplayerconnect = true;
+          // reset game 
+        }else{
+          gameOver = true;
+          status = "You are Dead";
+        }
+  }
   }
 }
 
 let checkBrickBallCollision = (brick) => {
-    let brickBox = {
+  let brickBox = {
     x:brick.x + BRICK_WIDTH/2,
     y:brick.y + BRICK_HEIGHT/2,
     width: BRICK_WIDTH,
@@ -244,8 +292,8 @@ let checkBrickBallCollision = (brick) => {
 };
 
 let testCollisionRect = (rect1,rect2) => {
-  return rect1.x <= rect2.x + rect2.width
-    && rect2.x <= rect1.x + rect1.width
-    && rect1.y <= rect2.y + rect2.height
-    && rect2.y <= rect1.y + rect1.height;
+return rect1.x <= rect2.x + rect2.width
+  && rect2.x <= rect1.x + rect1.width
+  && rect1.y <= rect2.y + rect2.height
+  && rect2.y <= rect1.y + rect1.height;
 };
