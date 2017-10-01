@@ -59,24 +59,28 @@ let coordinates = [{x : 30 , y : 30 },
 ];
 
 
+var heldKeys = {}
 
-window.onload = () => {
+var addHoldKeyListener = (keyname) => {
 
   document.addEventListener('keydown',function(evt){
-      if(evt.code === "ArrowLeft"){
-        if(paddle_X  > 0){
-          paddle_X -= PADDLE_XV;  
-        }
-              
-      }
-      if(evt.code === "ArrowRight"){
-        if(paddle_X + PADDLE_WIDTH  < canvas.width){
-          paddle_X += PADDLE_XV; 
-        }
+      if(evt.code === keyname){
+        heldKeys[keyname] = true;
       }
   });
 
+  document.addEventListener('keyup',function(evt){
+      if(evt.code === keyname){
+        heldKeys[keyname] = false;   
+      }
+  });
+}
 
+window.onload = () => {
+
+  addHoldKeyListener('ArrowLeft')
+  addHoldKeyListener('ArrowRight')
+  
   document.addEventListener('mousedown',function(evt){
     // if( ball_XV == 0 && ball_YV == 0){
     //    ball_XV = 5; 
@@ -95,9 +99,11 @@ window.onload = () => {
 }; //initializing function
 
 
-var mainGame = () => {
+let mainGame = () => {
 
   if(!gameOver){
+
+      updatePaddlePosition();
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "white";
@@ -188,6 +194,18 @@ let gameOverReset = () => {
     numLives=3;
 
 } //gameOverReset
+
+
+let updatePaddlePosition = () => {
+
+  if (heldKeys['ArrowLeft'] && paddle_X > 0){
+    paddle_X -= PADDLE_XV;  
+  }
+
+  if (heldKeys['ArrowRight'] && paddle_X + PADDLE_WIDTH < canvas.width){
+    paddle_X += PADDLE_XV;  
+  }
+}
 
 let updateBallPosition = () => {
   ball_Y += ball_YV;

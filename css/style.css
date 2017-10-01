@@ -1,0 +1,12 @@
+body {
+    background-color: white;
+}
+
+h2 {
+    color: black;
+    font-family: Arial;
+}
+
+.game_area {
+    margin-top: 70px;
+}
