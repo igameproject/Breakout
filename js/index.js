@@ -7,7 +7,7 @@ const PADDLE_WIDTH = 95;
 const PADDLE_HEIGHT = 15;
 let paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
 const PADDLE_Y = canvas.height - PADDLE_HEIGHT - 10;;
-const PADDLE_XV = 18;
+const PADDLE_XV = 10;
 let score = 0;
 
 //Ball Properties
