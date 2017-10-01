@@ -56,6 +56,7 @@ let coordinates = [{x : 30 , y : 30 },
 ];
 
 
+var heldKeys = {}
 
 let movingLeft = false;
 let movingRight = false;
@@ -92,7 +93,9 @@ window.onload = () => {
           movingRight = true;
       }
   });
+}
 
+window.onload = () => {
 
   document.addEventListener('keyup',function(evt) {
     if(evt.code === 'ArrowLeft'){
@@ -124,7 +127,7 @@ window.onload = () => {
 }; //initializing function
 
 
-var mainGame = () => {
+let mainGame = () => {
 
   if(!gameOver){
       if(movingLeft === true ){
@@ -211,8 +214,21 @@ let gameReset = () => {
 
 } //gameReset
 
-let updateBallPosition = () => {
 
+
+
+let updatePaddlePosition = () => {
+
+  if (heldKeys['ArrowLeft'] && paddle_X > 0){
+    paddle_X -= PADDLE_XV;  
+  }
+
+  if (heldKeys['ArrowRight'] && paddle_X + PADDLE_WIDTH < canvas.width){
+    paddle_X += PADDLE_XV;  
+  }
+}
+
+let updateBallPosition = () => {
   ball_Y += ball_YV;
   ball_X += ball_XV;
 
