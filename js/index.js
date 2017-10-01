@@ -61,9 +61,7 @@ var heldKeys = {}
 let movingLeft = false;
 let movingRight = false;
 
-function sleep(ms){
-  return new Promise(resolve => setTimeout(resolve,ms))
-};
+
 
 function moveRight() {
   if(paddle_X + PADDLE_WIDTH  < canvas.width){
@@ -83,19 +81,18 @@ function moveLeft() {
   }  
 }
 
+
+
 window.onload = () => {
 
   document.addEventListener('keydown',function(evt){
-      if(evt.code === "ArrowLeft"){
-          movingLeft = true;  
-      }        
-      else if(evt.code === "ArrowRight"){
-          movingRight = true;
-      }
+    if(evt.code === "ArrowLeft"){
+        movingLeft = true;  
+    }        
+    else if(evt.code === "ArrowRight"){
+        movingRight = true;
+    }
   });
-}
-
-window.onload = () => {
 
   document.addEventListener('keyup',function(evt) {
     if(evt.code === 'ArrowLeft'){
@@ -105,8 +102,6 @@ window.onload = () => {
       movingRight = false;
     }
   });
-
-
 
 
   document.addEventListener('mousedown',function(evt){
