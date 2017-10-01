@@ -1,4 +1,5 @@
 # Breakout
+[Gameplay](screenshot/breakout.png)
 
 * __What does this project do?__
   This is Atari Breakout clone created using HTML5 and Javascript.
