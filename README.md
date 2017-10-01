@@ -12,3 +12,13 @@ If you find a way to improve the game that hasn't been mentioned in the issues. 
 
 * __Where can I get more help, if I need it?__
 You can contact the owner at techie.vigneshramesh@gmail.com
+
+## How to play
+
+You control a small platform using the left and right arrow keys. You goal is to keep the ball bouncing and hit all block on the top of the screen.
+
+You win when there are no more blocks to destroy.
+
+You have maximum of three lives, you lose a life when you let the ball fall off the screen and lose the game when you lose all lives.
+
+![how-to-play](assets/how-to-play.jpg)
