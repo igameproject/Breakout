@@ -1,21 +1,23 @@
 let canvas = document.getElementById("mainGame");
 let ctx =  canvas.getContext('2d'); 
-
-
+let initialize = true;
 //Paddle Properties
 const PADDLE_WIDTH = 95;
 const PADDLE_HEIGHT = 15;
+console.log(canvas.width)
 let paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
 const PADDLE_Y = canvas.height - PADDLE_HEIGHT - 10;;
 const PADDLE_XV = 10;
 let score = 0;
-
+let game = ''
 //Ball Properties
 const BALL_DIA = 20;
 let ball_XV = -5;
 let ball_YV = -5;
 let ball_Y = PADDLE_Y - BALL_DIA/2 ;
 let ball_X = paddle_X + PADDLE_WIDTH/2;
+
+
 
 // Lives
 let numLives = 3;
@@ -25,38 +27,8 @@ let status;
 //Bricks
 //These will be set of coordinates which will be displayed via loop
 //Different levels can be loaded based on this map which will be stored in different file
-const BRICK_WIDTH = 60;
-const BRICK_HEIGHT = 25;
+
 //const MARGIN = 20X and 15Y -> Never used 
-let coordinates = [{x : 30 , y : 30 },
-                   {x : 110 , y : 30 },
-                   {x : 190 , y : 30 },
-                   {x : 270 , y : 30 },
-                   {x : 350 , y : 30 },
-                   {x : 430 , y : 30 },
-                   {x : 510 , y : 30 },
-                   {x : 30 , y : 70 },
-                   {x : 110 , y : 70 },
-                   {x : 190 , y : 70 },
-                   {x : 270 , y : 70 },
-                   {x : 350 , y : 70 },
-                   {x : 430 , y : 70 },
-                   {x : 510 , y : 70 },
-                   {x : 30 , y : 110 },
-                   {x : 110 , y : 110 },
-                   {x : 190 , y : 110 },
-                   {x : 270 , y : 110 },
-                   {x : 350 , y : 110 },
-                   {x : 430 , y : 110 },
-                   {x : 510 , y : 110 },
-                   {x : 30 , y : 150 },
-                   {x : 110 , y : 150 },
-                   {x : 190 , y : 150 },
-                   {x : 270 , y : 150 },
-                   {x : 350 , y : 150 },
-                   {x : 430 , y : 150 },
-                   {x : 510 , y : 150 }
-];
 
 
 var heldKeys = {}
@@ -96,36 +68,59 @@ window.onload = () => {
   setInterval(mainGame, 1000/framesPerSecond);
 
 
+
+
+
 }; //initializing function
 
 
 let mainGame = () => {
 
+  if (initialize){
+    initialize = false;
+    game = initializeGame()
+  }
+
+
   if(!gameOver){
 
+
+
       updatePaddlePosition();
+
+
+
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "white";
       ctx.fillRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT);
       ctx.fillStyle = "#1eddff";
       //bricks display
-      coordinates.forEach((elem, index) => {
-        if(checkBrickBallCollision(elem)){
-          coordinates.splice(index,1);
+      let levelBrickWidth = game.levels[game.level].brick_width
+      let levelBrickHeight = game.levels[game.level].brick_height
+      game.levels[game.level].coordinates.forEach((elem, index) => {
+        if(checkBrickBallCollision(elem, levelBrickHeight, levelBrickWidth)){
+          game.levels[game.level].coordinates.splice(index,1);
           ball_XV = ball_XV; 
           ball_YV = -ball_YV;   
         }
         else
-          ctx.fillRect(elem.x,elem.y,BRICK_WIDTH,BRICK_HEIGHT);
+          ctx.fillRect(elem.x,elem.y,levelBrickWidth,levelBrickHeight);
       });
-      if(coordinates.length === 0){
-        status = "You have Won"; 
+
+    if(game.levels[game.level].coordinates.length === 0){
+      game.level ++
+      resetBall()
+      if (game.level >= game.levels.length){
+        status = "You have Won";
         gameOver = true;
       }
+    }
 
       ctx.fillStyle = "white";
-      updateBallPosition(); 
+      updateBallPosition();
+      ctx.font="16px Arial";
+      ctx.fillText("Level " + (game.level+1), 10 , 20); // set type on paddle
       ctx.beginPath();
       ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
       ctx.fill();
@@ -157,34 +152,7 @@ let lifeLossReset = () => {
 }
 
 let gameOverReset = () => {
-    coordinates = [{x : 30 , y : 30 },
-                   {x : 110 , y : 30 },
-                   {x : 190 , y : 30 },
-                   {x : 270 , y : 30 },
-                   {x : 350 , y : 30 },
-                   {x : 430 , y : 30 },
-                   {x : 510 , y : 30 },
-                   {x : 30 , y : 70 },
-                   {x : 110 , y : 70 },
-                   {x : 190 , y : 70 },
-                   {x : 270 , y : 70 },
-                   {x : 350 , y : 70 },
-                   {x : 430 , y : 70 },
-                   {x : 510 , y : 70 },
-                   {x : 30 , y : 110 },
-                   {x : 110 , y : 110 },
-                   {x : 190 , y : 110 },
-                   {x : 270 , y : 110 },
-                   {x : 350 , y : 110 },
-                   {x : 430 , y : 110 },
-                   {x : 510 , y : 110 },
-                   {x : 30 , y : 150 },
-                   {x : 110 , y : 150 },
-                   {x : 190 , y : 150 },
-                   {x : 270 , y : 150 },
-                   {x : 350 , y : 150 },
-                   {x : 430 , y : 150 },
-                   {x : 510 , y : 150 }];
+
     paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
     ball_XV = -5;
     ball_YV = -5;
@@ -192,6 +160,8 @@ let gameOverReset = () => {
     ball_X = paddle_X + PADDLE_WIDTH/2;
     gameOver = false;
     numLives=3;
+    initialize = true;
+    initializeGame()
 
 } //gameOverReset
 
@@ -253,12 +223,12 @@ let updateBallPosition = () => {
   }
 }
 
-let checkBrickBallCollision = (brick) => {
+let checkBrickBallCollision = (brick, height, width) => {
   let brickBox = {
-    x:brick.x + BRICK_WIDTH/2,
-    y:brick.y + BRICK_HEIGHT/2,
-    width: BRICK_WIDTH,
-    height: BRICK_HEIGHT,
+    x:brick.x + width/2,
+    y:brick.y + height/2,
+    width: width,
+    height: height,
 
   }
   let ballBox={
@@ -276,3 +246,94 @@ return rect1.x <= rect2.x + rect2.width
   && rect1.y <= rect2.y + rect2.height
   && rect2.y <= rect1.y + rect1.height;
 };
+
+function initializeGame(){
+  let game = {
+    level: 0,
+    levels: getBrickCoordinates(),
+  }
+
+  return game
+}
+
+function getBrickCoordinates(level){
+
+  let levels = [
+    {
+      coordinates: [
+        {x: 30, y: 30},
+        {x: 110, y: 30},
+        {x: 190, y: 30},
+        {x: 270, y: 30},
+        {x: 350, y: 30},
+        {x: 430, y: 30},
+        {x: 510, y: 30},
+        {x: 30, y: 70},
+        {x: 110, y: 70},
+        {x: 190, y: 70},
+        {x: 270, y: 70},
+        {x: 350, y: 70},
+        {x: 430, y: 70},
+        {x: 510, y: 70},
+        {x: 30, y: 110},
+        {x: 110, y: 110},
+        {x: 190, y: 110},
+        {x: 270, y: 110},
+        {x: 350, y: 110},
+        {x: 430, y: 110},
+        {x: 510, y: 110},
+        {x: 30, y: 150},
+        {x: 110, y: 150},
+        {x: 190, y: 150},
+        {x: 270, y: 150},
+        {x: 350, y: 150},
+        {x: 430, y: 150},
+        {x: 510, y: 150}
+      ],
+       brick_width: 60,
+       brick_height: 25
+    },
+    {
+      brick_width: 40,
+      brick_height: 30,
+      coordinates: buildLevel(30, 40, 10, 10),
+    },
+    {
+      brick_width: 25,
+      brick_height: 25,
+      coordinates: buildLevel(25, 25, 5, 5),
+    }
+
+  ]
+
+  return levels
+
+}
+
+function resetBall(){
+  ball_Y = PADDLE_Y - BALL_DIA/2 ;
+  ball_X = paddle_X + PADDLE_WIDTH/2;
+}
+
+function buildLevel(height, width, hSpace, vSpace){
+  let level = [];
+  let blockFloor = 225;
+
+  let endPos = Math.floor(canvas.width / (width+hSpace))*(width+hSpace);
+  if (endPos == canvas.width){
+    endPos = canvas.width-width-hSpace;
+  }
+
+  let startPos = ((canvas.width-endPos)/2);
+
+  for (let i = startPos; i <= endPos; i+=width+hSpace){
+    for(let j = 30; j <= blockFloor; j+=height+vSpace){
+      level.push({
+        x: i,
+        y: j
+      });
+    }
+  }
+
+  return level
+}
