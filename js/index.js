@@ -80,7 +80,7 @@ function moveLeft() {
   }
   else{
     movingLeft = false;
-  } 
+  }  
 }
 
 window.onload = () => {
