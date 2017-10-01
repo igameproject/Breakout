@@ -16,7 +16,7 @@ let ball_XV = -5;
 let ball_YV = -5;
 let ball_Y = PADDLE_Y - BALL_DIA/2 ;
 let ball_X = paddle_X + PADDLE_WIDTH/2;
-
+var times=3;
 let gameOver = false; 
 let status;
 //Bricks
@@ -120,9 +120,14 @@ let mainGame = () => {
         status = "You have Won"; 
         gameOver = true;
       }
-
+      
       ctx.fillStyle = "white";
       updateBallPosition(); 
+    if(times<1)
+          {
+              gameOver = true;
+            status = "You are Dead";
+          }
       ctx.beginPath();
       ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
       ctx.fill();
@@ -175,7 +180,7 @@ let gameReset = () => {
     ball_Y = PADDLE_Y - BALL_DIA/2 ;
     ball_X = paddle_X + PADDLE_WIDTH/2;
     gameOver = false;
-
+    times=3;
 } //gameReset
 
 
@@ -227,8 +232,16 @@ let updateBallPosition = () => {
         // ball_X = paddle_X + PADDLE_WIDTH/2;
         // ball_XV = 0; 
         // ball_YV = 0;
-        gameOver = true;
-        status = "You are Dead";
+        paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
+        ball_Y = PADDLE_Y - BALL_DIA/2 ;
+        ball_X = paddle_X + PADDLE_WIDTH/2;
+        times--;    
+        ball_XV = -5;
+        ball_YV = -5;
+          
+            
+          
+      
   }
 }
 
