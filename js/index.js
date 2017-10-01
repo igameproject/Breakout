@@ -1,5 +1,5 @@
 let canvas = document.getElementById("mainGame");
-let ctx =  canvas.getContext('2d'); 
+let ctx =  canvas.getContext('2d');
 
 
 //Paddle Properties
@@ -12,19 +12,19 @@ let score = 0;
 
 //Ball Properties
 const BALL_DIA = 20;
-let ball_XV = -5;
-let ball_YV = -5;
+let ball_XV = -1;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!BE SURE TO SET THESE BACK TO -5 BEFORE YOU GOGO!!!!!!!!!!!!!
+let ball_YV = -1;
 let ball_Y = PADDLE_Y - BALL_DIA/2 ;
 let ball_X = paddle_X + PADDLE_WIDTH/2;
 
-let gameOver = false; 
+let gameOver = false;
 let status;
 //Bricks
 //These will be set of coordinates which will be displayed via loop
 //Different levels can be loaded based on this map which will be stored in different file
 const BRICK_WIDTH = 60;
 const BRICK_HEIGHT = 25;
-//const MARGIN = 20X and 15Y -> Never used 
+//const MARGIN = 20X and 15Y -> Never used
 let coordinates = [{x : 30 , y : 30 },
                    {x : 110 , y : 30 },
                    {x : 190 , y : 30 },
@@ -62,13 +62,13 @@ window.onload = () => {
   document.addEventListener('keydown',function(evt){
       if(evt.code === "ArrowLeft"){
         if(paddle_X  > 0){
-          paddle_X -= PADDLE_XV;  
+          paddle_X -= PADDLE_XV;
         }
-              
+
       }
       if(evt.code === "ArrowRight"){
         if(paddle_X + PADDLE_WIDTH  < canvas.width){
-          paddle_X += PADDLE_XV; 
+          paddle_X += PADDLE_XV;
         }
       }
   });
@@ -76,7 +76,7 @@ window.onload = () => {
 
   document.addEventListener('mousedown',function(evt){
     // if( ball_XV == 0 && ball_YV == 0){
-    //    ball_XV = 5; 
+    //    ball_XV = 5;
     //     ball_YV = -5;
     // }
     if(gameOver == true){
@@ -84,7 +84,7 @@ window.onload = () => {
     }
 
   });
-  
+
   let framesPerSecond = 50;
   setInterval(mainGame, 1000/framesPerSecond);
 
@@ -104,19 +104,19 @@ var mainGame = () => {
       coordinates.forEach((elem, index) => {
         if(checkBrickBallCollision(elem)){
           coordinates.splice(index,1);
-          ball_XV = ball_XV; 
-          ball_YV = -ball_YV;   
+          ball_XV = ball_XV;
+          ball_YV = -ball_YV;
         }
         else
           ctx.fillRect(elem.x,elem.y,BRICK_WIDTH,BRICK_HEIGHT);
       });
       if(coordinates.length === 0){
-        status = "You have Won"; 
+        status = "You have Won";
         gameOver = true;
       }
 
       ctx.fillStyle = "white";
-      updateBallPosition(); 
+      updateBallPosition();
       ctx.beginPath();
       ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
       ctx.fill();
@@ -178,27 +178,27 @@ let updateBallPosition = () => {
   ball_X += ball_XV;
 
   if(ball_X > canvas.width || ball_X < 0)
-    ball_XV = -ball_XV; 
+    ball_XV = -ball_XV;
 
   if(ball_Y < 0){
     ball_YV = -ball_YV;
   }
 
-  if(ball_Y > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){
+  if(ball_Y + BALL_DIA/2 > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){//By: Cynthia Buck - Added BALL_DIA/2 to ball_Y here so that the collision between the ball and the paddle is detected when the ball touches the paddle
         if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
             ball_YV = -ball_YV;
         }
         //touches left half of paddle
         // if(ball_X > paddle_X && ball_X < PADDLE_WIDTH/2 ){
-        //   ball_XV = -5; 
+        //   ball_XV = -5;
         //   ball_YV = -ball_YV;
         // }
         // if(ball_X < paddle_X + PADDLE_WIDTH && ball_X > PADDLE_WIDTH/2 ){
-        //   ball_XV = 5; 
+        //   ball_XV = 5;
         //   ball_YV = -ball_YV;
         // }
         // if(ball_X > PADDLE_WIDTH - 5 && ball_X < PADDLE_WIDTH + 5 ){
-        //   ball_XV = 0; 
+        //   ball_XV = 0;
         //   ball_YV = -ball_YV;
         // }
   }
@@ -206,7 +206,7 @@ let updateBallPosition = () => {
   if(ball_Y > canvas.height){
         // ball_Y = PADDLE_Y - BALL_DIA/2 ;
         // ball_X = paddle_X + PADDLE_WIDTH/2;
-        // ball_XV = 0; 
+        // ball_XV = 0;
         // ball_YV = 0;
         gameOver = true;
         status = "You are Dead";
