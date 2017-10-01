@@ -1,31 +1,31 @@
-var  canvas = document.getElementById("mainGame");
-var ctx =  canvas.getContext('2d'); 
+let canvas = document.getElementById("mainGame");
+let ctx =  canvas.getContext('2d'); 
 
 
 //Paddle Properties
 const PADDLE_WIDTH = 95;
 const PADDLE_HEIGHT = 15;
-var paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
+let paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
 const PADDLE_Y = canvas.height - PADDLE_HEIGHT - 10;;
 const PADDLE_XV = 18;
-var score = 0;
+let score = 0;
 
 //Ball Properties
 const BALL_DIA = 20;
-var ball_XV = -5;
-var ball_YV = -5;
-var ball_Y = PADDLE_Y - BALL_DIA/2 ;
-var ball_X = paddle_X + PADDLE_WIDTH/2;
+let ball_XV = -5;
+let ball_YV = -5;
+let ball_Y = PADDLE_Y - BALL_DIA/2 ;
+let ball_X = paddle_X + PADDLE_WIDTH/2;
 
-var gameOver = false; 
-var status;
+let gameOver = false; 
+let status;
 //Bricks
 //These will be set of coordinates which will be displayed via loop
 //Different levels can be loaded based on this map which will be stored in different file
 const BRICK_WIDTH = 60;
 const BRICK_HEIGHT = 25;
 //const MARGIN = 20X and 15Y -> Never used 
-var coordinates = [{x : 30 , y : 30 },
+let coordinates = [{x : 30 , y : 30 },
                    {x : 110 , y : 30 },
                    {x : 190 , y : 30 },
                    {x : 270 , y : 30 },
@@ -89,27 +89,25 @@ window.onload = () => {
 
   });
   
-  var framesPerSecond = 50;
-  setInterval(mainGame,1000/framesPerSecond);
+  let framesPerSecond = 50;
+  setInterval(mainGame, 1000/framesPerSecond);
 
 
 }; //initializing function
 
 
-var mainGame = () => {
+let mainGame = () => {
 
   if(!gameOver){
 
       updatePaddlePosition();
-
       ctx.fillStyle = "black";
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = "white"
-      ctx.fillRect(paddle_X,PADDLE_Y,PADDLE_WIDTH,PADDLE_HEIGHT);
-
-      ctx.fillStyle = "#1eddff"
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      ctx.fillRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT);
+      ctx.fillStyle = "#1eddff";
       //bricks display
-      coordinates.forEach(function(elem,index){
+      coordinates.forEach((elem, index) => {
         if(checkBrickBallCollision(elem)){
           coordinates.splice(index,1);
           ball_XV = ball_XV; 
@@ -117,22 +115,20 @@ var mainGame = () => {
         }
         else
           ctx.fillRect(elem.x,elem.y,BRICK_WIDTH,BRICK_HEIGHT);
-
       });
       if(coordinates.length === 0){
         status = "You have Won"; 
         gameOver = true;
       }
 
-      ctx.fillStyle = "white"
+      ctx.fillStyle = "white";
       updateBallPosition(); 
       ctx.beginPath();
       ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
       ctx.fill();
   }
 
-  else{
-
+  else {
       ctx.fillStyle = "#1eddff";
       ctx.fillRect(0,0,canvas.width,canvas.height);
       ctx.fillStyle = "black";
@@ -144,9 +140,7 @@ var mainGame = () => {
   }
 } //main game
 
-
-
-var gameReset = () => {
+let gameReset = () => {
     coordinates = [{x : 30 , y : 30 },
                    {x : 110 , y : 30 },
                    {x : 190 , y : 30 },
@@ -184,7 +178,10 @@ var gameReset = () => {
 
 } //gameReset
 
-var updatePaddlePosition = () => {
+
+
+
+let updatePaddlePosition = () => {
 
   if (heldKeys['ArrowLeft'] && paddle_X > 0){
     paddle_X -= PADDLE_XV;  
@@ -195,8 +192,7 @@ var updatePaddlePosition = () => {
   }
 }
 
-var updateBallPosition = () =>{
-
+let updateBallPosition = () => {
   ball_Y += ball_YV;
   ball_X += ball_XV;
 
@@ -236,36 +232,26 @@ var updateBallPosition = () =>{
   }
 }
 
-
-var checkBrickBallCollision = (brick) => {
-    var brickBox={
+let checkBrickBallCollision = (brick) => {
+    let brickBox = {
     x:brick.x + BRICK_WIDTH/2,
     y:brick.y + BRICK_HEIGHT/2,
     width: BRICK_WIDTH,
     height: BRICK_HEIGHT,
 
   }
-  var ballBox={
+  let ballBox={
     x:ball_X,
     y:ball_Y,
     width:BALL_DIA,
-    height:BALL_DIA,
-
+    height:BALL_DIA
   }
-  
-
   return testCollisionRect(brickBox,ballBox);
 };
 
-
-
-var testCollisionRect = (rect1,rect2) => {
+let testCollisionRect = (rect1,rect2) => {
   return rect1.x <= rect2.x + rect2.width
     && rect2.x <= rect1.x + rect1.width
     && rect1.y <= rect2.y + rect2.height
     && rect2.y <= rect1.y + rect1.height;
-
 };
-
- 
-
