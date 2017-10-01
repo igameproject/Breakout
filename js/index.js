@@ -7,7 +7,7 @@ const PADDLE_WIDTH = 95;
 const PADDLE_HEIGHT = 15;
 var paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
 const PADDLE_Y = canvas.height - PADDLE_HEIGHT - 10;;
-const PADDLE_XV = 18;
+const PADDLE_XV = 10;
 var score = 0;
 
 //Ball Properties
@@ -55,22 +55,26 @@ var coordinates = [{x : 30 , y : 30 },
                    {x : 510 , y : 150 }
 ];
 
-
+var moveLeftTimer;
+var moveRightTimer;
 
 window.onload = () => {
 
   document.addEventListener('keydown',function(evt){
       if(evt.code === "ArrowLeft"){
-        if(paddle_X  > 0){
-          paddle_X -= PADDLE_XV;  
-        }
-              
+        movePaddle("left");
       }
       if(evt.code === "ArrowRight"){
-        if(paddle_X + PADDLE_WIDTH  < canvas.width){
-          paddle_X += PADDLE_XV; 
-        }
+        movePaddle("right");
       }
+  });
+  
+  document.addEventListener('keyup',function(evt){
+	  if(evt.code === "ArrowLeft"){
+      movePaddle("left", true);
+	  } else if (evt.code === "ArrowRight"){
+	    movePaddle("right", true);
+	  }
   });
 
 
@@ -114,6 +118,7 @@ var mainGame = () => {
 
       });
       if(coordinates.length === 0){
+        movePaddle(false);
         status = "You have Won"; 
         gameOver = true;
       }
@@ -175,7 +180,6 @@ var gameReset = () => {
     ball_Y = PADDLE_Y - BALL_DIA/2 ;
     ball_X = paddle_X + PADDLE_WIDTH/2;
     gameOver = false;
-
 } //gameReset
 
 
@@ -215,6 +219,7 @@ var updateBallPosition = () =>{
         // ball_X = paddle_X + PADDLE_WIDTH/2;
         // ball_XV = 0; 
         // ball_YV = 0;
+        movePaddle(false);
         gameOver = true;
         status = "You are Dead";
   }
@@ -241,7 +246,44 @@ var checkBrickBallCollision = (brick) => {
   return testCollisionRect(brickBox,ballBox);
 };
 
-
+var pauseLeft = false;
+var pauseRight = false;
+var movePaddle = (direction, stop) => {
+  if (direction === "left") {
+    pauseRight = !stop;
+    if (stop) {
+      moveLeftTimer = clearInterval(moveLeftTimer);
+    } else {
+      if (!moveLeftTimer) {
+        pauseLeft = false;
+        moveLeftTimer = setInterval(function() {
+          if (!pauseLeft && paddle_X  > 0) {
+            paddle_X -= PADDLE_XV;
+          }
+        }, 20);
+      }
+    }
+  } else if (direction === "right") {
+    pauseLeft = !stop;
+    if (stop) {
+      moveRightTimer = clearInterval(moveRightTimer);
+    } else {
+      if (!moveRightTimer) {
+        pauseRight = false;
+        moveRightTimer = setInterval(function() {
+          if(!pauseRight && (paddle_X + PADDLE_WIDTH  < canvas.width)){
+            paddle_X += PADDLE_XV;
+          }
+        }, 20);
+      }
+    }
+  } else {
+    moveLeftTimer = clearInterval(moveLeftTimer);
+    moveRightTimer = clearInterval(moveRightTimer);
+    pauseLeft = false;
+    pauseRight = false;
+  }
+};
 
 var testCollisionRect = (rect1,rect2) => {
   return rect1.x <= rect2.x + rect2.width
