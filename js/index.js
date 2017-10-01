@@ -58,32 +58,58 @@ let coordinates = [{x : 30 , y : 30 },
 
 var heldKeys = {}
 
-var addHoldKeyListener = (keyname) => {
+let movingLeft = false;
+let movingRight = false;
 
-  document.addEventListener('keydown',function(evt){
-      if(evt.code === keyname){
-        heldKeys[keyname] = true;
-      }
-  });
 
-  document.addEventListener('keyup',function(evt){
-      if(evt.code === keyname){
-        heldKeys[keyname] = false;   
-      }
-  });
+
+function moveRight() {
+  if(paddle_X + PADDLE_WIDTH  < canvas.width){
+    paddle_X += PADDLE_XV;
+  }
+  else{
+    movingRight = false;
+  }
 }
+
+function moveLeft() {
+  if(paddle_X  > 0){
+    paddle_X -= PADDLE_XV;
+  }
+  else{
+    movingLeft = false;
+  }  
+}
+
+
 
 window.onload = () => {
 
-  addHoldKeyListener('ArrowLeft')
-  addHoldKeyListener('ArrowRight')
-  
+  document.addEventListener('keydown',function(evt){
+    if(evt.code === "ArrowLeft"){
+        movingLeft = true;  
+    }        
+    else if(evt.code === "ArrowRight"){
+        movingRight = true;
+    }
+  });
+
+  document.addEventListener('keyup',function(evt) {
+    if(evt.code === 'ArrowLeft'){
+      movingLeft = false;
+    }
+    else if(evt.code === 'ArrowRight'){
+      movingRight = false;
+    }
+  });
+
+
   document.addEventListener('mousedown',function(evt){
     // if( ball_XV == 0 && ball_YV == 0){
     //    ball_XV = 5; 
     //     ball_YV = -5;
     // }
-    if(gameOver == true){
+    if(gameOver === true){
        gameReset();
     }
 
@@ -99,8 +125,13 @@ window.onload = () => {
 let mainGame = () => {
 
   if(!gameOver){
-
-      updatePaddlePosition();
+      if(movingLeft === true ){
+        moveLeft();
+      }
+      else if(movingRight === true)
+      {
+        moveRight();
+      }
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "white";
@@ -142,33 +173,33 @@ let mainGame = () => {
 
 let gameReset = () => {
     coordinates = [{x : 30 , y : 30 },
-                   {x : 110 , y : 30 },
-                   {x : 190 , y : 30 },
-                   {x : 270 , y : 30 },
-                   {x : 350 , y : 30 },
-                   {x : 430 , y : 30 },
-                   {x : 510 , y : 30 },
-                   {x : 30 , y : 70 },
-                   {x : 110 , y : 70 },
-                   {x : 190 , y : 70 },
-                   {x : 270 , y : 70 },
-                   {x : 350 , y : 70 },
-                   {x : 430 , y : 70 },
-                   {x : 510 , y : 70 },
-                   {x : 30 , y : 110 },
-                   {x : 110 , y : 110 },
-                   {x : 190 , y : 110 },
-                   {x : 270 , y : 110 },
-                   {x : 350 , y : 110 },
-                   {x : 430 , y : 110 },
-                   {x : 510 , y : 110 },
-                   {x : 30 , y : 150 },
-                   {x : 110 , y : 150 },
-                   {x : 190 , y : 150 },
-                   {x : 270 , y : 150 },
-                   {x : 350 , y : 150 },
-                   {x : 430 , y : 150 },
-                   {x : 510 , y : 150 }];
+                  {x : 110 , y : 30 },
+                  {x : 190 , y : 30 },
+                  {x : 270 , y : 30 },
+                  {x : 350 , y : 30 },
+                  {x : 430 , y : 30 },
+                  {x : 510 , y : 30 },
+                  {x : 30 , y : 70 },
+                  {x : 110 , y : 70 },
+                  {x : 190 , y : 70 },
+                  {x : 270 , y : 70 },
+                  {x : 350 , y : 70 },
+                  {x : 430 , y : 70 },
+                  {x : 510 , y : 70 },
+                  {x : 30 , y : 110 },
+                  {x : 110 , y : 110 },
+                  {x : 190 , y : 110 },
+                  {x : 270 , y : 110 },
+                  {x : 350 , y : 110 },
+                  {x : 430 , y : 110 },
+                  {x : 510 , y : 110 },
+                  {x : 30 , y : 150 },
+                  {x : 110 , y : 150 },
+                  {x : 190 , y : 150 },
+                  {x : 270 , y : 150 },
+                  {x : 350 , y : 150 },
+                  {x : 430 , y : 150 },
+                  {x : 510 , y : 150 }];
     paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
     ball_XV = -5;
     ball_YV = -5;
@@ -196,8 +227,9 @@ let updateBallPosition = () => {
   ball_Y += ball_YV;
   ball_X += ball_XV;
 
-  if(ball_X > canvas.width || ball_X < 0)
-    ball_XV = -ball_XV; 
+  if(ball_X > canvas.width || ball_X < 0){
+    ball_XV = -ball_XV;
+  } 
 
   if(ball_Y < 0){
     ball_YV = -ball_YV;
@@ -230,10 +262,10 @@ let updateBallPosition = () => {
         gameOver = true;
         status = "You are Dead";
   }
-}
+};
 
 let checkBrickBallCollision = (brick) => {
-    let brickBox = {
+  let brickBox = {
     x:brick.x + BRICK_WIDTH/2,
     y:brick.y + BRICK_HEIGHT/2,
     width: BRICK_WIDTH,
@@ -255,3 +287,4 @@ let testCollisionRect = (rect1,rect2) => {
     && rect1.y <= rect2.y + rect2.height
     && rect2.y <= rect1.y + rect1.height;
 };
+
