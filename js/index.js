@@ -106,6 +106,9 @@ window.onload = () => {
     if(gameOver == true){
        gameOverReset();
     }
+    else{
+        ballplayerconnect = false;
+    }
 
   });
   
