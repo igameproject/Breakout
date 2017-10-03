@@ -20,7 +20,8 @@ let ball_X = paddle_X + PADDLE_WIDTH/2;
 //ball connected to player paddle
 let ballplayerconnect = true;
 // Lives
-let numLives = 3;
+const START_AMOUNT_OF_LIVES = 3;
+let numLives = START_AMOUNT_OF_LIVES;
 
 
 let gameOver = false; 
@@ -208,7 +209,8 @@ let gameOverReset = () => {
     ball_Y = PADDLE_Y - BALL_DIA/2 ;
     ball_X = paddle_X + PADDLE_WIDTH/2;
     gameOver = false;
-	  ballplayerconnect = true;
+    ballplayerconnect = true;
+    numLives = START_AMOUNT_OF_LIVES;
 } //gameReset
 
 let updatePaddlePosition = () => {
