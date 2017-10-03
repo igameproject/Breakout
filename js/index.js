@@ -64,6 +64,10 @@ let coordinates = [{x : 30 , y : 30 },
 
 var heldKeys = {}
 
+document.addEventListener('mousemove', (event) => {
+	paddle_X = event.layerX-PADDLE_WIDTH/2;
+});
+
 var addHoldKeyListener = (keyname) => {
 
   document.addEventListener('keydown',function(evt){
@@ -105,7 +109,9 @@ window.onload = () => {
     // }
     if(gameOver == true){
        gameOverReset();
-    }
+    }else{
+		ballplayerconnect = false;
+	}
 
   });
   
