@@ -76,7 +76,7 @@ var addHoldKeyListener = (keyname) => {
       if(evt.code === keyname){
         heldKeys[keyname] = false;   
       }
-	  if(evt.code === "Space"){
+	   if(evt.button==0){
 		  if(ballplayerconnect){
 			ballplayerconnect = false;
 			if(heldKeys['ArrowLeft'] == true){
@@ -94,15 +94,17 @@ var addHoldKeyListener = (keyname) => {
 }
 
 window.onload = () => {
-
-  addHoldKeyListener('ArrowLeft')
-  addHoldKeyListener('ArrowRight')
   
   document.addEventListener('mousedown',function(evt){
     // if( ball_XV == 0 && ball_YV == 0){
     //    ball_XV = 5; 
     //     ball_YV = -5;
     // }
+    if(evt.button==0){
+	ballplayerconnect = false;
+	addHoldKeyListener('ArrowLeft')
+  	addHoldKeyListener('ArrowRight')
+    }
     if(gameOver == true){
        gameOverReset();
     }
