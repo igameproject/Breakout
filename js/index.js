@@ -79,16 +79,18 @@ var addHoldKeyListener = (keyname) => {
       }
 	  if(evt.code === "Space"){
 		  if(ballplayerconnect){
-			ballplayerconnect = false;
-			if(heldKeys['ArrowLeft'] == true){
-				ball_XV = -5;
-			}
-			else if(heldKeys['ArrowRight'] == true){
-				ball_XV = 5;
-			}
-			else{
-				ball_YV = -5;
-			}
+			  ballplayerconnect = false;
+			  if(heldKeys['ArrowLeft'] == true){
+			  	ball_XV = -5;
+			  }
+			  else if(heldKeys['ArrowRight'] == true){
+			  	ball_XV = 5;
+        }
+        else{
+
+          ball_XV = (Math.round(Math.random())*10)-5;
+          console.log(ball_XV);
+        }
 		  }
 	  }
   });
@@ -167,7 +169,6 @@ let mainGame = () => {
 // reset game with previous info
 let lifeLossReset = () => {
   //paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
-  ball_XV = -5;
   ball_YV = -5;
   ball_Y = PADDLE_Y - BALL_DIA/2 ;
   ball_X = paddle_X + PADDLE_WIDTH/2;
@@ -204,11 +205,7 @@ let gameOverReset = () => {
                    {x : 430 , y : 150 },
                    {x : 510 , y : 150 }];
     paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
-    ball_XV = -5;
-    ball_YV = -5;
-    ball_Y = PADDLE_Y - BALL_DIA/2 ;
-    ball_X = paddle_X + PADDLE_WIDTH/2;
-    gameOver = false;
+    lifeLossReset();
     ballplayerconnect = true;
     numLives = START_AMOUNT_OF_LIVES;
 } //gameReset
