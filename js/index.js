@@ -1,10 +1,11 @@
 let canvas = document.getElementById("mainGame");
-let ctx =  canvas.getContext('2d'); 
+let ctx =  canvas.getContext('2d');
 
 
 //Paddle Properties
 const PADDLE_WIDTH = 95;
 const PADDLE_HEIGHT = 15;
+const PADDLE_EDGE_LEN = 5;
 let paddle_X = canvas.width/2 - PADDLE_WIDTH/2;
 const PADDLE_Y = canvas.height - PADDLE_HEIGHT - 10;;
 const PADDLE_XV = 10;
@@ -23,14 +24,14 @@ let ballplayerconnect = true;
 let numLives = 3;
 
 
-let gameOver = false; 
+let gameOver = false;
 let status;
 //Bricks
 //These will be set of coordinates which will be displayed via loop
 //Different levels can be loaded based on this map which will be stored in different file
 const BRICK_WIDTH = 60;
 const BRICK_HEIGHT = 25;
-//const MARGIN = 20X and 15Y -> Never used 
+//const MARGIN = 20X and 15Y -> Never used
 let coordinates = [{x : 30 , y : 30 },
                    {x : 110 , y : 30 },
                    {x : 190 , y : 30 },
@@ -74,7 +75,7 @@ var addHoldKeyListener = (keyname) => {
 
   document.addEventListener('keyup',function(evt){
       if(evt.code === keyname){
-        heldKeys[keyname] = false;   
+        heldKeys[keyname] = false;
       }
 	  if(evt.code === "Space"){
 		  if(ballplayerconnect){
@@ -97,10 +98,10 @@ window.onload = () => {
 
   addHoldKeyListener('ArrowLeft')
   addHoldKeyListener('ArrowRight')
-  
+
   document.addEventListener('mousedown',function(evt){
     // if( ball_XV == 0 && ball_YV == 0){
-    //    ball_XV = 5; 
+    //    ball_XV = 5;
     //     ball_YV = -5;
     // }
     if(gameOver == true){
@@ -108,7 +109,7 @@ window.onload = () => {
     }
 
   });
-  
+
   let framesPerSecond = 50;
   setInterval(mainGame, 1000/framesPerSecond);
 
@@ -130,19 +131,19 @@ let mainGame = () => {
       coordinates.forEach((elem, index) => {
         if(checkBrickBallCollision(elem)){
           coordinates.splice(index,1);
-          ball_XV = ball_XV; 
-          ball_YV = -ball_YV;   
+          ball_XV = ball_XV;
+          ball_YV = -ball_YV;
         }
         else
           ctx.fillRect(elem.x,elem.y,BRICK_WIDTH,BRICK_HEIGHT);
       });
       if(coordinates.length === 0){
-        status = "You have Won"; 
+        status = "You have Won";
         gameOver = true;
       }
 
       ctx.fillStyle = "white";
-      updateBallPosition(); 
+      updateBallPosition();
       ctx.beginPath();
       ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
       ctx.fill();
@@ -170,7 +171,7 @@ let lifeLossReset = () => {
   ball_YV = -5;
   ball_Y = PADDLE_Y - BALL_DIA/2 ;
   ball_X = paddle_X + PADDLE_WIDTH/2;
-  gameOver = false;  
+  gameOver = false;
 }
 
 let gameOverReset = () => {
@@ -214,12 +215,19 @@ let gameOverReset = () => {
 let updatePaddlePosition = () => {
 
   if (heldKeys['ArrowLeft'] && paddle_X > 0){
-    paddle_X -= PADDLE_XV;  
+    paddle_X -= PADDLE_XV;
   }
 
   if (heldKeys['ArrowRight'] && paddle_X + PADDLE_WIDTH < canvas.width){
-    paddle_X += PADDLE_XV;  
+    paddle_X += PADDLE_XV;
   }
+}
+
+let collisionAtLeftCorner = () => {
+  return ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_EDGE_LEN;
+}
+let collisionAtRightCorner = () => {
+  return ball_X >= paddle_X + PADDLE_WIDTH - PADDLE_EDGE_LEN && ball_X <= paddle_X + PADDLE_WIDTH;
 }
 
 let updateBallPosition = () => {
@@ -231,27 +239,36 @@ let updateBallPosition = () => {
   ball_X += ball_XV;
 
   if(ball_X > canvas.width || ball_X < 0)
-    ball_XV = -ball_XV; 
+    ball_XV = -ball_XV;
 
   if(ball_Y < 0){
     ball_YV = -ball_YV;
   }
 
   if(ball_Y > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){
-        if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
-            ball_YV = -ball_YV;
+        // ball touches left or right corner of the paddle
+        // Angle of return is constant at 30 degrees taken wrt paddle as base
+        if(collisionAtLeftCorner() || collisionAtRightCorner()){
+          x_sign = ball_XV > 0 ? 1 : -1
+          mag = Math.sqrt(ball_XV*ball_XV + ball_YV*ball_YV)
+          ball_YV = -mag * Math.sin(Math.PI/6);
+          ball_XV = x_sign * mag * Math.cos(Math.PI/6);
+        }
+        // ball touches center of the paddle
+        else if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
+          ball_YV = -ball_YV;
         }
         //touches left half of paddle
         // if(ball_X > paddle_X && ball_X < PADDLE_WIDTH/2 ){
-        //   ball_XV = -5; 
+        //   ball_XV = -5;
         //   ball_YV = -ball_YV;
         // }
         // if(ball_X < paddle_X + PADDLE_WIDTH && ball_X > PADDLE_WIDTH/2 ){
-        //   ball_XV = 5; 
+        //   ball_XV = 5;
         //   ball_YV = -ball_YV;
         // }
         // if(ball_X > PADDLE_WIDTH - 5 && ball_X < PADDLE_WIDTH + 5 ){
-        //   ball_XV = 0; 
+        //   ball_XV = 0;
         //   ball_YV = -ball_YV;
         // }
   }
@@ -259,13 +276,13 @@ let updateBallPosition = () => {
   if(ball_Y > canvas.height){
         // ball_Y = PADDLE_Y - BALL_DIA/2 ;
         // ball_X = paddle_X + PADDLE_WIDTH/2;
-        // ball_XV = 0; 
+        // ball_XV = 0;
         // ball_YV = 0;
         if(numLives > 1){
           numLives--;
           lifeLossReset();
 		  ballplayerconnect = true;
-          // reset game 
+          // reset game
         }else{
           gameOver = true;
           status = "You are Dead";
