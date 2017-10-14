@@ -192,35 +192,37 @@ const updateBallPosition = () => {
     if(ballplayerconnect){
       ball_Y = PADDLE_Y - 10;
       ball_X = paddle_X + (PADDLE_WIDTH/2);
-    } else {
-    ball_Y += ball_YV;
-    ball_X += ball_XV;
+    } 
+    else {
+        ball_Y += ball_YV;
+        ball_X += ball_XV;
 
+        if (ball_X > canvas.width || ball_X < 0){
+            ball_XV = -ball_XV;
+        } 
 
-    if (ball_X > canvas.width || ball_X < 0) ball_XV = -ball_XV;
-
-    if (ball_Y < 0) {
-          ball_YV = -ball_YV;
-    }
-
-    if (ball_Y > canvas.height - PADDLE_HEIGHT - 10 && ball_Y < canvas.height) {
-          if (ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH) {
-              ball_YV = -ball_YV;
-          }
-    }
-
-  if(ball_Y > canvas.height){
-        if(numLives > 1){
-          numLives--;
-          lifeLossReset();
-		      ballplayerconnect = true;
-          // reset game 
+        if (ball_Y < 0) {
+            ball_YV = -ball_YV;
         }
-        else{
-          gameOver = true;
-          status = "You are Dead";
+
+        if (ball_Y > canvas.height - PADDLE_HEIGHT - 10 && ball_Y < canvas.height) {
+            if (ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH) {
+                ball_YV = -ball_YV;
+            }
         }
-  }
+
+        if(ball_Y > canvas.height){
+            if(numLives > 1){
+              numLives--;
+              lifeLossReset();
+    		      ballplayerconnect = true;
+              // reset game 
+            }
+            else{
+              gameOver = true;
+              status = "You are Dead";
+            }
+        }
   }
 }
 
