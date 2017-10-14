@@ -78,7 +78,7 @@ const addHoldKeyListener = keyname => {
         if (code === keyname) {
             heldKeys[keyname] = false;
         }
-        if(evt.code === "Space"){
+        if(code === "Space"){
             if(ballplayerconnect){
               ballplayerconnect = false;
               if(heldKeys['ArrowLeft'] == true){
@@ -167,10 +167,8 @@ const lifeLossReset = () => {
     ball_Y = PADDLE_Y - BALL_DIA / 2;
     ball_X = paddle_X + PADDLE_WIDTH / 2;
     gameOver = false;
-  };
-
-	  ballplayerconnect = true;
-} //gameReset
+    ballplayerconnect = true;	  
+}; //gameReset
 
 
 const gameOverReset = () => {
