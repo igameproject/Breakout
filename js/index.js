@@ -18,9 +18,11 @@ let ball_YV = -5;
 let ball_Y = PADDLE_Y - BALL_DIA / 2;
 let ball_X = paddle_X + PADDLE_WIDTH / 2;
 
+//ball connected to player paddle
+let ballplayerconnect = true;
 // Lives
 let numLives = 3;
-let gameOver = false;
+let gameOver = false; 
 let status;
 
 //Bricks
@@ -76,8 +78,23 @@ const addHoldKeyListener = keyname => {
         if (code === keyname) {
             heldKeys[keyname] = false;
         }
+        if(evt.code === "Space"){
+            if(ballplayerconnect){
+              ballplayerconnect = false;
+              if(heldKeys['ArrowLeft'] == true){
+                ball_XV = -5;
+              }
+              else if(heldKeys['ArrowRight'] == true){
+                ball_XV = 5;
+              }
+              else{
+                ball_YV = -5;
+              }
+            }
+         }
     });
 };
+
 
 window.onload = () => {
     addHoldKeyListener('ArrowLeft');
@@ -116,6 +133,7 @@ const mainGame = () => {
             gameOver = true;
         }
 
+
         ctx.fillStyle = BALL_COLOR;
         updateBallPosition();
         ctx.beginPath();
@@ -140,6 +158,7 @@ const mainGame = () => {
     }
 };
 
+
 // Reset game with previous info
 const lifeLossReset = () => {
     paddle_X = canvas.width / 2 - PADDLE_WIDTH / 2;
@@ -148,7 +167,11 @@ const lifeLossReset = () => {
     ball_Y = PADDLE_Y - BALL_DIA / 2;
     ball_X = paddle_X + PADDLE_WIDTH / 2;
     gameOver = false;
-};
+  };
+
+	  ballplayerconnect = true;
+} //gameReset
+
 
 const gameOverReset = () => {
     coordinates = [...INITIAL_COORDINATES];
@@ -166,33 +189,42 @@ const updatePaddlePosition = () => {
     }
 };
 
+
 const updateBallPosition = () => {
+    if(ballplayerconnect){
+      ball_Y = PADDLE_Y - 10;
+      ball_X = paddle_X + (PADDLE_WIDTH/2);
+    } else {
     ball_Y += ball_YV;
     ball_X += ball_XV;
+
 
     if (ball_X > canvas.width || ball_X < 0) ball_XV = -ball_XV;
 
     if (ball_Y < 0) {
-        ball_YV = -ball_YV;
+          ball_YV = -ball_YV;
     }
 
     if (ball_Y > canvas.height - PADDLE_HEIGHT - 10 && ball_Y < canvas.height) {
-        if (ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH) {
-            ball_YV = -ball_YV;
-        }
+          if (ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH) {
+              ball_YV = -ball_YV;
+          }
     }
 
-    if (ball_Y > canvas.height) {
-        if (numLives > 1) {
-            numLives--;
-            lifeLossReset();
-            // Reset game
-        } else {
-            gameOver = true;
-            status = 'You are Dead';
+  if(ball_Y > canvas.height){
+        if(numLives > 1){
+          numLives--;
+          lifeLossReset();
+		      ballplayerconnect = true;
+          // reset game 
         }
-    }
-};
+        else{
+          gameOver = true;
+          status = "You are Dead";
+        }
+  }
+  }
+}
 
 const checkBrickBallCollision = ({ x, y }) => {
     const brickBox = {
