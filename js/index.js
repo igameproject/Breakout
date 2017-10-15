@@ -1,3 +1,6 @@
+
+let canvas = document.getElementById("mainGame");
+let ctx =  canvas.getContext('2d');
 const canvas = document.getElementById('mainGame');
 const ctx = canvas.getContext('2d');
 const BG_COLOR = 'black';
@@ -13,6 +16,12 @@ let score = 0;
 // Ball Properties
 const BALL_COLOR = 'white';
 const BALL_DIA = 20;
+let ball_XV = -1;
+let ball_YV = -1;
+let ball_Y = PADDLE_Y - BALL_DIA/2 ;
+let ball_X = paddle_X + PADDLE_WIDTH/2;
+
+let gameOver = false;
 let ball_XV = -5;
 let ball_YV = -5;
 let ball_Y = PADDLE_Y - BALL_DIA / 2;
@@ -30,6 +39,36 @@ let status;
 //Different levels can be loaded based on this map which will be stored in different file
 const BRICK_COLOR = '#1eddff';
 const BRICK_HEIGHT = 25;
+//const MARGIN = 20X and 15Y -> Never used
+let coordinates = [{x : 30 , y : 30 },
+                   {x : 110 , y : 30 },
+                   {x : 190 , y : 30 },
+                   {x : 270 , y : 30 },
+                   {x : 350 , y : 30 },
+                   {x : 430 , y : 30 },
+                   {x : 510 , y : 30 },
+                   {x : 30 , y : 70 },
+                   {x : 110 , y : 70 },
+                   {x : 190 , y : 70 },
+                   {x : 270 , y : 70 },
+                   {x : 350 , y : 70 },
+                   {x : 430 , y : 70 },
+                   {x : 510 , y : 70 },
+                   {x : 30 , y : 110 },
+                   {x : 110 , y : 110 },
+                   {x : 190 , y : 110 },
+                   {x : 270 , y : 110 },
+                   {x : 350 , y : 110 },
+                   {x : 430 , y : 110 },
+                   {x : 510 , y : 110 },
+                   {x : 30 , y : 150 },
+                   {x : 110 , y : 150 },
+                   {x : 190 , y : 150 },
+                   {x : 270 , y : 150 },
+                   {x : 350 , y : 150 },
+                   {x : 430 , y : 150 },
+                   {x : 510 , y : 150 }
+];
 const BRICK_WIDTH = 60;
 
 const INITIAL_COORDINATES = [
@@ -67,6 +106,16 @@ let coordinates = [...INITIAL_COORDINATES];
 
 const heldKeys = {};
 
+  document.addEventListener('keydown',function(evt){
+      if(evt.code === "ArrowLeft"){
+        if(paddle_X  > 0){
+          paddle_X -= PADDLE_XV;
+        }
+
+      }
+      if(evt.code === "ArrowRight"){
+        if(paddle_X + PADDLE_WIDTH  < canvas.width){
+          paddle_X += PADDLE_XV;
 const addHoldKeyListener = keyname => {
     addEventListener('keydown', ({ code }) => {
         if (code === keyname) {
@@ -96,6 +145,19 @@ const addHoldKeyListener = keyname => {
 };
 
 
+  document.addEventListener('mousedown',function(evt){
+    // if( ball_XV == 0 && ball_YV == 0){
+    //    ball_XV = 5;
+    //     ball_YV = -5;
+    // }
+    if(gameOver == true){
+       gameReset();
+    }
+
+  });
+
+  let framesPerSecond = 50;
+  setInterval(mainGame, 1000/framesPerSecond);
 window.onload = () => {
     addHoldKeyListener('ArrowLeft');
     addHoldKeyListener('ArrowRight');
@@ -158,6 +220,33 @@ const mainGame = () => {
     }
 };
 
+  if(!gameOver){
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      ctx.fillRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT);
+      ctx.fillStyle = "#1eddff";
+      //bricks display
+      coordinates.forEach((elem, index) => {
+        if(checkBrickBallCollision(elem)){
+          coordinates.splice(index,1);
+          ball_XV = ball_XV;
+          ball_YV = -ball_YV;
+        }
+        else
+          ctx.fillRect(elem.x,elem.y,BRICK_WIDTH,BRICK_HEIGHT);
+      });
+      if(coordinates.length === 0){
+        status = "You have Won";
+        gameOver = true;
+      }
+
+      ctx.fillStyle = "white";
+      updateBallPosition();
+      ctx.beginPath();
+      ctx.arc(ball_X,ball_Y,BALL_DIA/2,0,Math.PI*2);
+      ctx.fill();
+  }
 
 // Reset game with previous info
 const lifeLossReset = () => {
@@ -188,6 +277,8 @@ const updatePaddlePosition = () => {
 };
 
 
+  if(ball_X > canvas.width || ball_X < 0)
+    ball_XV = -ball_XV;
 const updateBallPosition = () => {
     if(ballplayerconnect){
       ball_Y = PADDLE_Y - 10;
@@ -201,11 +292,37 @@ const updateBallPosition = () => {
             ball_XV = -ball_XV;
         } 
 
+  if(ball_Y + BALL_DIA/2 > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height){//By: Cynthia Buck - Added BALL_DIA/2 to ball_Y here so that the collision between the ball and the paddle is detected when the ball touches the paddle
+        if(ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH ){
+            ball_YV = -ball_YV;
+        }
+        //touches left half of paddle
+        // if(ball_X > paddle_X && ball_X < PADDLE_WIDTH/2 ){
+        //   ball_XV = -5;
+        //   ball_YV = -ball_YV;
+        // }
+        // if(ball_X < paddle_X + PADDLE_WIDTH && ball_X > PADDLE_WIDTH/2 ){
+        //   ball_XV = 5;
+        //   ball_YV = -ball_YV;
+        // }
+        // if(ball_X > PADDLE_WIDTH - 5 && ball_X < PADDLE_WIDTH + 5 ){
+        //   ball_XV = 0;
+        //   ball_YV = -ball_YV;
+        // }
+  }
+
+  if(ball_Y > canvas.height){
+        // ball_Y = PADDLE_Y - BALL_DIA/2 ;
+        // ball_X = paddle_X + PADDLE_WIDTH/2;
+        // ball_XV = 0;
+        // ball_YV = 0;
+        gameOver = true;
+        status = "You are Dead";
         if (ball_Y < 0) {
             ball_YV = -ball_YV;
         }
 
-        if (ball_Y > canvas.height - PADDLE_HEIGHT - 10 && ball_Y < canvas.height) {
+        if (ball_Y + BALL_DIA/2 > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height {
             if (ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH) {
                 ball_YV = -ball_YV;
             }
