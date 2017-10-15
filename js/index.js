@@ -13,8 +13,10 @@ let score = 0;
 // Ball Properties
 const BALL_COLOR = 'white';
 const BALL_DIA = 20;
-let ball_XV = -5;
-let ball_YV = -5;
+const BALL_MAX_BOUNCE_ANGLE = Math.PI * 75 / 180; //75 deg
+const BALL_VELOCITY = 5;
+let ball_XV = -BALL_VELOCITY;
+let ball_YV = -BALL_VELOCITY;
 let ball_Y = PADDLE_Y - BALL_DIA / 2;
 let ball_X = paddle_X + PADDLE_WIDTH / 2;
 
@@ -82,13 +84,13 @@ const addHoldKeyListener = keyname => {
             if(ballplayerconnect){
               ballplayerconnect = false;
               if(heldKeys['ArrowLeft'] == true){
-                ball_XV = -5;
+                ball_XV = -BALL_VELOCITY;
               }
               else if(heldKeys['ArrowRight'] == true){
-                ball_XV = 5;
+                ball_XV = BALL_VELOCITY;
               }
               else{
-                ball_YV = -5;
+                ball_YV = -BALL_VELOCITY;
               }
             }
          }
@@ -162,8 +164,8 @@ const mainGame = () => {
 // Reset game with previous info
 const lifeLossReset = () => {
     paddle_X = canvas.width / 2 - PADDLE_WIDTH / 2;
-    ball_XV = -5;
-    ball_YV = -5;
+    ball_XV = -BALL_VELOCITY;
+    ball_YV = -BALL_VELOCITY;
     ball_Y = PADDLE_Y - BALL_DIA / 2;
     ball_X = paddle_X + PADDLE_WIDTH / 2;
     gameOver = false;
@@ -205,9 +207,14 @@ const updateBallPosition = () => {
             ball_YV = -ball_YV;
         }
 
-        if (ball_Y > canvas.height - PADDLE_HEIGHT - 10 && ball_Y < canvas.height) {
+        if (ball_Y > canvas.height - PADDLE_HEIGHT - 10 && ball_Y < canvas.height - 10) {
             if (ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH) {
-                ball_YV = -ball_YV;
+                // bounce ball based on relative distance from the center of the paddle
+                const paddle_XCenter = paddle_X + PADDLE_WIDTH / 2;
+                const relativeIntersection = paddle_XCenter - ball_X;
+                const bounceAngle = BALL_MAX_BOUNCE_ANGLE * relativeIntersection / (PADDLE_WIDTH / 2);
+                ball_YV = -BALL_VELOCITY * Math.cos(bounceAngle);
+                ball_XV = -BALL_VELOCITY * Math.sin(bounceAngle);
             }
         }
 
