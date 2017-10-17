@@ -22,7 +22,7 @@ let ball_X = paddle_X + PADDLE_WIDTH / 2;
 let ballplayerconnect = true;
 // Lives
 let numLives = 3;
-let gameOver = false; 
+let gameOver = false;
 let status;
 
 //Bricks
@@ -167,7 +167,7 @@ const lifeLossReset = () => {
     ball_Y = PADDLE_Y - BALL_DIA / 2;
     ball_X = paddle_X + PADDLE_WIDTH / 2;
     gameOver = false;
-    ballplayerconnect = true;	  
+    ballplayerconnect = true;
 }; //gameReset
 
 
@@ -192,20 +192,20 @@ const updateBallPosition = () => {
     if(ballplayerconnect){
       ball_Y = PADDLE_Y - 10;
       ball_X = paddle_X + (PADDLE_WIDTH/2);
-    } 
+    }
     else {
         ball_Y += ball_YV;
         ball_X += ball_XV;
 
         if (ball_X > canvas.width || ball_X < 0){
             ball_XV = -ball_XV;
-        } 
+        }
 
         if (ball_Y < 0) {
             ball_YV = -ball_YV;
         }
 
-        if (ball_Y > canvas.height - PADDLE_HEIGHT - 10 && ball_Y < canvas.height) {
+        if (ball_Y + BALL_DIA/2 > canvas.height - PADDLE_HEIGHT -10 && ball_Y < canvas.height) {
             if (ball_X >= paddle_X && ball_X <= paddle_X + PADDLE_WIDTH) {
                 ball_YV = -ball_YV;
             }
@@ -216,7 +216,7 @@ const updateBallPosition = () => {
               numLives--;
               lifeLossReset();
     		      ballplayerconnect = true;
-              // reset game 
+              // reset game
             }
             else{
               gameOver = true;
