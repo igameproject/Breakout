@@ -48,11 +48,8 @@ let coordinates = [...INITIAL_COORDINATES];
 const mainGame = () => {
     if (!gameOver) {
         updatePaddlePosition();
-        ctx.fillStyle = BG_COLOR;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = BALL_COLOR;
-        ctx.fillRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT);
-        ctx.fillStyle = BRICK_COLOR;
+        colorRect(0, 0, canvas.width, canvas.height,BG_COLOR);
+        colorRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT,BALL_COLOR);
 
         // Bricks display
         coordinates.map((elem, index) => {
@@ -61,7 +58,7 @@ const mainGame = () => {
                 ball_XV = ball_XV;
                 ball_YV = -ball_YV;
             } else {
-                ctx.fillRect(elem.x, elem.y, BRICK_WIDTH, BRICK_HEIGHT);
+                colorRect(elem.x, elem.y, BRICK_WIDTH, BRICK_HEIGHT,BRICK_COLOR);
             }
         });
 
@@ -71,27 +68,20 @@ const mainGame = () => {
         }
 
 
-        ctx.fillStyle = BALL_COLOR;
         updateBallPosition();
-        ctx.beginPath();
-        ctx.arc(ball_X, ball_Y, BALL_DIA / 2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = BG_COLOR;
-        ctx.font = '16px Arial';
-        ctx.fillText(
-            'Lives : ' + numLives,
+        drawBall(ball_X,ball_Y, BALL_DIA / 2, BALL_COLOR);
+
+        colorText('Lives : ' + numLives,
             paddle_X + PADDLE_WIDTH / 6,
-            PADDLE_Y + PADDLE_HEIGHT - 2
-        );
+            PADDLE_Y + PADDLE_HEIGHT - 2,
+            BG_COLOR,
+            '16px Arial');
+
     } else {
-        ctx.fillStyle = BRICK_COLOR;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = BG_COLOR;
-        ctx.font = '60px Arial';
-        ctx.fillText(status, 112, 150);
-        ctx.fillStyle = '#474747';
-        ctx.font = '20px Arial';
-        ctx.fillText('Click to Play Again', canvas.width / 2 - 100, 250);
+        
+        colorRect(0, 0, canvas.width, canvas.height,BRICK_COLOR);
+        colorText(status,112,150,BG_COLOR,'60px Arial')
+        colorText(status,canvas.width / 2 - 100, 250,'#474747','20px Arial')
     }
 };
 
