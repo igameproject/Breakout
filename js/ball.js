@@ -93,9 +93,6 @@ function ballBrickHandling() {
         if(bricks[brickIndexUnderBall]) {
             bricks[brickIndexUnderBall] = 0;
             bricksLeft--;
-            console.log('Hit:' + ballBrickRow + ',' + ballBrickCol);
-                //  ball_XV *= -1;
-                // ball_YV *= -1;
 
             let prevBallX = ball_X - ball_XV;
             let prevBallY = ball_Y - ball_YV;

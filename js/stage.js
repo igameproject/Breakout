@@ -6,28 +6,15 @@ const PADDLE_COLOR = '#cecece'
 
 const BRICK_COLOR = '#1eddff';
 const BRICK_HEIGHT = 30;
-const BRICK_WIDTH = 81.25 ;
+const BRICK_WIDTH = 81.35 ;
 const BRICK_GAP = 2;
 const BRICK_COLS = 16;
-const BRICK_ROWS = 9;
-const OUTER_PADDING = 52;
+const BRICK_ROWS = 12;
 
-let level = 1;
 
-let  bricks = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+let level = 0;
 
-               ];
+let  bricks = levels[level];
 let bricksLeft = bricks.length;
 
 
@@ -71,8 +58,7 @@ function drawBricks() {
 
             if(bricks[arrayIndex]) {
                 colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,
-                    BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'blue');
-                colorText(eachRow +',' + eachCol,BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow +20,'black','10px Arial')
+                    BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
             } // end of is this brick here
         } // end of for each brick
     } // end of for each row
