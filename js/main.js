@@ -2,7 +2,7 @@ const canvas = document.getElementById('mainGame');
 const ctx = canvas.getContext('2d');
 
 // Lives
-const LIVES = 1;
+const LIVES = 3;
 let numLives = LIVES;
 let gameOver = false; 
 let status;

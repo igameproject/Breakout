@@ -41,7 +41,7 @@ const mainGame = () => {
         drawBall(ball_X,ball_Y, BALL_DIA / 2, BALL_COLOR);
         colorText('Lives : ' + numLives,canvas.width - 20,30,BALL_COLOR,'16px Arial',"right");
         colorText('Score : ' + score ,20,30,BALL_COLOR,'16px Arial');
-        colorText('Level : ' + level ,canvas.width/2,30,BALL_COLOR,'16px Arial','center');
+        colorText('Level : ' + (level + 1 ) ,canvas.width/2,30,BALL_COLOR,'16px Arial','center');
         drawBricks();
 
     }
