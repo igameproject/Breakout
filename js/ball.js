@@ -74,9 +74,6 @@ const ballPaddleHandling = () => {
         let ballDistFromPaddleCenterX = ball_X - centerOfPaddleX;
         ball_XV = ballDistFromPaddleCenterX * 0.3;
 
-        // if(bricksLeft == 0) {
-            // brickReset();
-       // } // out of bricks
     } // ball center inside paddle
 } // end of ballPaddleHandling
 
@@ -93,6 +90,11 @@ function ballBrickHandling() {
         if(bricks[brickIndexUnderBall]) {
             bricks[brickIndexUnderBall] = 0;
             bricksLeft--;
+
+
+            if(bricksLeft == 0) {
+                goToNextLevel();
+           } // out of bricks
 
             let prevBallX = ball_X - ball_XV;
             let prevBallY = ball_Y - ball_YV;

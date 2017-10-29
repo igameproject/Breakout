@@ -13,13 +13,27 @@ const BRICK_ROWS = 12;
 
 
 let level = 0;
+let  bricks = levels[level].slice();
 
-let  bricks = levels[level];
-let bricksLeft = bricks.length;
+const countBricks = () => {
+    let brickCount = 0;
+    for(var i=0;i<bricks.length;i++){
+        if(bricks[i]) brickCount++;  
+    }
+    return brickCount;
+}
+
+
+
+// let bricksLeft = levelBricksCount[level]
+let bricksLeft = countBricks();
+
+
 
 
 const mainGame = () => {
     if(!gameOver) {
+        console.log(bricksLeft);
         updatePaddlePosition();
         colorRect(0, 0, canvas.width, canvas.height,BG_COLOR);
         colorRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT,PADDLE_COLOR);
@@ -28,8 +42,6 @@ const mainGame = () => {
         colorText('Lives : ' + numLives,canvas.width - 20,30,BALL_COLOR,'16px Arial',"right");
         colorText('Score : ' + score ,20,30,BALL_COLOR,'16px Arial');
         colorText('Level : ' + level ,canvas.width/2,30,BALL_COLOR,'16px Arial','center');
-
-        //draw bricks
         drawBricks();
 
     }
@@ -56,9 +68,10 @@ function drawBricks() {
             var arrayIndex = rowColToArrayIndex(eachCol, eachRow);
 
 
-            if(bricks[arrayIndex]) {
+            if(bricks[arrayIndex] == 1) {
                 colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,
                     BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
+                // bricksLeft++;
             } // end of is this brick here
         } // end of for each brick
     } // end of for each row
@@ -73,3 +86,36 @@ function isBrickAtColRow(col, row) {
         return false;
     }
 }
+
+const lifeLossReset = () => {
+
+    ballReset();
+    gameOver = false;
+    ballplayerconnect = true;     
+}; //gameReset
+
+
+const gameOverReset = () => {
+    initializeBricks();
+    paddle_X = canvas.width / 2 - PADDLE_WIDTH / 2;
+    lifeLossReset();
+    numLives = LIVES;
+    level = 0;
+    initializeBricks();
+};
+
+
+const goToNextLevel = () => {
+    lifeLossReset();
+    level++;
+    initializeBricks();
+    paddle_X = canvas.width / 2 - PADDLE_WIDTH / 2;
+    numLives = LIVES;
+}
+
+
+const initializeBricks = () => {
+    bricks = levels[level].slice();
+    bricksLeft = countBricks();
+}
+
