@@ -90,6 +90,7 @@ function ballBrickHandling() {
         if(bricks[brickIndexUnderBall]) {
             bricks[brickIndexUnderBall] = 0;
             bricksLeft--;
+            score += 20;
 
 
             if(bricksLeft == 0) {

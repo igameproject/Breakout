@@ -48,8 +48,8 @@ const mainGame = () => {
     else {
         colorRect(0, 0, canvas.width, canvas.height,BRICK_COLOR);
         colorText(status,canvas.width/2,canvas.height/3,BG_COLOR,'60px Arial','center');
+        colorText("Final Score : " + score,canvas.width/2, canvas.height/2 - 50,'#252525','25px Arial','center');
         colorText("Click to play again",canvas.width/2, canvas.height/2,'#474747','20px Arial','center');
-
     }
 
 
@@ -101,7 +101,7 @@ const gameOverReset = () => {
     lifeLossReset();
     numLives = LIVES;
     level = 0;
-    initializeBricks();
+    score = 0; 
 };
 
 
