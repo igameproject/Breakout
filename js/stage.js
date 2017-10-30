@@ -5,11 +5,17 @@ const BG_COLOR = 'black';
 const PADDLE_COLOR = '#cecece'
 
 const BRICK_COLOR = '#1eddff';
-const BRICK_HEIGHT = 30;
-const BRICK_WIDTH = 81.35 ;
+const BRICK_HEIGHT = 27;
+const BRICK_WIDTH = 81 ;
+
+// const BRICK_HEIGHT = 16 ;
+// const BRICK_WIDTH = 48 ;
+
 const BRICK_GAP = 2;
 const BRICK_COLS = 16;
 const BRICK_ROWS = 12;
+
+
 
 
 let level = 0;
@@ -33,15 +39,22 @@ let bricksLeft = countBricks();
 
 const mainGame = () => {
     if(!gameOver) { 
+        // colorRect(0, 0, canvas.width, canvas.height,BG_COLOR);
+        ctx.drawImage(skyPic, 0, 0);
+        drawBricks();
         updatePaddlePosition();
-        colorRect(0, 0, canvas.width, canvas.height,BG_COLOR);
-        colorRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT,PADDLE_COLOR);
+        // colorRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT,PADDLE_COLOR);
+        ctx.drawImage(paddlePic, paddle_X, PADDLE_Y);
+
+
         updateBallPosition();
-        drawBall(ball_X,ball_Y, BALL_DIA / 2, BALL_COLOR);
+        // drawBall(ball_X,ball_Y, BALL_DIA / 2, BALL_COLOR);
+        ctx.drawImage(ballPic, ball_X - BALL_DIA / 2, ball_Y - BALL_DIA / 2);
+
         colorText('Lives : ' + numLives,canvas.width - 20,30,BALL_COLOR,'16px Arial',"right");
         colorText('Score : ' + score ,20,30,BALL_COLOR,'16px Arial');
         colorText('Level : ' + (level + 1 ) ,canvas.width/2,30,BALL_COLOR,'16px Arial','center');
-        drawBricks();
+        
 
     }
     else {
@@ -58,24 +71,40 @@ function rowColToArrayIndex(col, row) {
     return col + BRICK_COLS * row;
 }
 
+
 function drawBricks() {
 
+    var brickLeftEdgeX = 0;
+    var brickTopEdgeY = 0;
+   
     for(var eachRow=0;eachRow<BRICK_ROWS;eachRow++) {
+
+        brickLeftEdgeX = 0;
         
         for(var eachCol=0;eachCol<BRICK_COLS;eachCol++) {
+
 
             var arrayIndex = rowColToArrayIndex(eachCol, eachRow);
 
 
-            if(bricks[arrayIndex] == 1) {
-                colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,
-                    BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
-                // bricksLeft++;
-            } // end of is this brick here
-        } // end of for each brick
-    } // end of for each row
+            if(bricks[arrayIndex]) {
+                // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
+                ctx.drawImage(brickPic, brickLeftEdgeX, brickTopEdgeY);
+                console.log(brickLeftEdgeX + ","+ brickTopEdgeY);
+                
+            } 
+            
 
-}; // end of drawBricks func
+            brickLeftEdgeX += BRICK_WIDTH; 
+        } 
+
+        brickTopEdgeY += BRICK_HEIGHT;
+
+    
+    } 
+}; 
+
+
 
 function isBrickAtColRow(col, row) {
     if(col >= 0 && col < BRICK_COLS && row >= 0 && row < BRICK_ROWS) {

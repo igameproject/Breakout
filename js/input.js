@@ -12,18 +12,6 @@ const addHoldKeyListener = keyname => {
             heldKeys[keyname] = false;
         }
 
-        if(ballplayerconnect){
-              // Change Speed of ball according to motion.
-              if(heldKeys['ArrowLeft'] == true){
-                ball_XV = -INITIAL_BALL_XV ;
-              }
-              else if(heldKeys['ArrowRight'] == true){
-                ball_XV = INITIAL_BALL_XV ;
-              }
-              else{
-                ball_YV = -INITIAL_BALL_YV ;
-              }
-            }
          
     });
 };
@@ -36,6 +24,12 @@ const mouseClickHandle = () => {
     else {
       if(ballplayerconnect){
         ballplayerconnect = false;
+          if(heldKeys['ArrowLeft'] == true){
+                ball_XV = INITIAL_BALL_XV ;
+              }
+              else if(heldKeys['ArrowRight'] == true){
+                ball_XV = -INITIAL_BALL_XV ;
+              }
       }
     }  
 }

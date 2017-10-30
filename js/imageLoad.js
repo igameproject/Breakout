@@ -1,8 +1,7 @@
-var brick=document.createElement("img");
-var paddle=document.createElement("img");
-var ball=document.createElement("img");
-
-var trackPics = [];
+var brickPic=document.createElement("img");
+var paddlePic=document.createElement("img");
+var ballPic=document.createElement("img");
+var skyPic=document.createElement("img");
 
 var picsToLoad = 0;
 
@@ -15,35 +14,24 @@ function countLoadedImageAndLaunchIfReady() {
 
 function beginLoadingImage(imgVar, fileName) {
   imgVar.onload=countLoadedImageAndLaunchIfReady;
-  imgVar.src="images/"+fileName;
-}
-
-function loadImageForTrackCode(trackCode, fileName) {
-  trackPics[trackCode] = document.createElement("img");
-  beginLoadingImage(trackPics[trackCode],fileName);
+  imgVar.src="assets/"+fileName;
 }
 
 function loadImages() {
 
   var imageList = [
-    {varName:carPic, theFile:"player1.png"},
-    {varName:car2Pic, theFile:"player2.png"},
-    
-    {trackType:TRACK_ROAD, theFile:"track_road.png"},
-    {trackType:TRACK_WALL, theFile:"track_wall.png"},
-    {trackType:TRACK_GOAL, theFile:"track_goal.png"},
-    {trackType:TRACK_TREE, theFile:"track_tree.png"},
-    {trackType:TRACK_FLAG, theFile:"track_flag.png"}
-    ];
+    {varName:ballPic, theFile:"ball.png"},
+    {varName:paddlePic, theFile:"paddle.png"},
+    {varName:brickPic, theFile:"brick.png"},
+    {varName:skyPic, theFile:"sky.png"}
+  ];
 
   picsToLoad = imageList.length;
 
   for(var i=0;i<imageList.length;i++) {
-    if(imageList[i].trackType != undefined) {
-      loadImageForTrackCode(imageList[i].trackType, imageList[i].theFile);
-    } else {
+    
       beginLoadingImage(imageList[i].varName, imageList[i].theFile);
-    } // end of else
+   
   } // end of for imageList
 
 } // end of function loadImages
