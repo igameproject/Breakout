@@ -10,6 +10,8 @@ let ball_Y = PADDLE_Y - BALL_DIA / 2;
 let ball_X = paddle_X + PADDLE_WIDTH / 2;
 //ball connected to player paddle
 let ballplayerconnect = true;
+let chainBounce = false;
+let bonusLifeEligible = true;
 
 
 
@@ -77,6 +79,7 @@ const ballPaddleHandling = () => {
         let ballDistFromPaddleCenterX = ball_X - centerOfPaddleX;
         ball_XV = ballDistFromPaddleCenterX * 0.3;
         ballSpeedIncrement(0.06);
+        chainBounce = false;
 
     } // ball center inside paddle
 } // end of ballPaddleHandling
@@ -94,8 +97,16 @@ function ballBrickHandling() {
         if(bricks[brickIndexUnderBall]) {
             bricks[brickIndexUnderBall] = 0;
             bricksLeft--;
-            score += 20;
+            
+            chainBounce ? score += 20 : score += 10;
+            
+            if(score >= 10000 && bonusLifeEligible){
+                numLives += 1;
+                bonusLifeEligible = false;
+            }
+
             ballSpeedIncrement(0.06);
+            chainBounce = true;
 
             if(bricksLeft == 0) {
                 goToNextLevel();
