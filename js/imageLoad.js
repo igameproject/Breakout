@@ -2,6 +2,8 @@ var brickPic=document.createElement("img");
 var paddlePic=document.createElement("img");
 var ballPic=document.createElement("img");
 var skyPic=document.createElement("img");
+var lifePic=document.createElement("img");
+
 
 var picsToLoad = 0;
 
@@ -23,7 +25,8 @@ function loadImages() {
     {varName:ballPic, theFile:"ball.png"},
     {varName:paddlePic, theFile:"paddle.png"},
     {varName:brickPic, theFile:"brick.png"},
-    {varName:skyPic, theFile:"sky.png"}
+    {varName:skyPic, theFile:"sky.png"},
+    {varName:lifePic, theFile:"life.png"}
   ];
 
   picsToLoad = imageList.length;

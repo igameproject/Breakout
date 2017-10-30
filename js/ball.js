@@ -26,8 +26,8 @@ const updateBallPosition = () => {
 }
 
 const ballReset=() => {
-    ball_XV = -INITIAL_BALL_XV; ;
-    ball_YV = -INITIAL_BALL_YV ;
+    ball_XV = INITIAL_BALL_XV; ;
+    ball_YV = INITIAL_BALL_YV ;
     ball_Y = PADDLE_Y - BALL_DIA / 2;
     ball_X = paddle_X + PADDLE_WIDTH / 2;
 }

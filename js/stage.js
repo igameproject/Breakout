@@ -1,8 +1,7 @@
 //Bricks
 //These will be set of coordinates which will be displayed via loop
 //Different levels can be loaded based on this map which will be stored in different file
-const BG_COLOR = 'black';
-const PADDLE_COLOR = '#cecece'
+
 
 const BRICK_COLOR = '#1eddff';
 const BRICK_HEIGHT = 27;
@@ -50,18 +49,28 @@ const mainGame = () => {
         updateBallPosition();
         // drawBall(ball_X,ball_Y, BALL_DIA / 2, BALL_COLOR);
         ctx.drawImage(ballPic, ball_X - BALL_DIA / 2, ball_Y - BALL_DIA / 2);
+        // colorText('Lives : ' + numLives,canvas.width - 20,30,"white",'16px Arial',"right");
+        
+        let lifePicOffset = 0
+        for(var i = 0; i < numLives ; i++){
 
-        colorText('Lives : ' + numLives,canvas.width - 20,30,BALL_COLOR,'16px Arial',"right");
-        colorText('Score : ' + score ,20,30,BALL_COLOR,'16px Arial');
-        colorText('Level : ' + (level + 1 ) ,canvas.width/2,30,BALL_COLOR,'16px Arial','center');
+            ctx.drawImage(lifePic, canvas.width - 50 - lifePicOffset , 15);
+            lifePicOffset += 30;
+
+
+        }
+
+        colorText('Score : ' + score ,20,30,"white",'16px Arial');
+        colorText('Level : ' + (level + 1 ) ,canvas.width/2,30,"white",'16px Arial','center');
         
 
     }
     else {
-        colorRect(0, 0, canvas.width, canvas.height,BRICK_COLOR);
-        colorText(status,canvas.width/2,canvas.height/3,BG_COLOR,'60px Arial','center');
-        colorText("Final Score : " + score,canvas.width/2, canvas.height/2 - 50,'#252525','25px Arial','center');
-        colorText("Click to play again",canvas.width/2, canvas.height/2,'#474747','20px Arial','center');
+        // colorRect(0, 0, canvas.width, canvas.height,BRICK_COLOR);
+        ctx.drawImage(skyPic, 0, 0);
+        colorText(status,canvas.width/2,canvas.height/3,"white",'60px Arial','center');
+        colorText("Final Score : " + score,canvas.width/2, canvas.height/2 - 50,"white",'25px Arial','center');
+        colorText("(Click) to play again",canvas.width/2, canvas.height/2,"white",'20px Arial','center');
     }
 
 
@@ -116,7 +125,6 @@ function isBrickAtColRow(col, row) {
 }
 
 const lifeLossReset = () => {
-
     ballReset();
     gameOver = false;
     ballplayerconnect = true;     
