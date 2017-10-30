@@ -17,7 +17,7 @@ const BRICK_ROWS = 12;
 
 
 
-let level = 0;
+let level = 0 ;
 let  bricks = levels[level].slice();
 
 const countBricks = () => {
@@ -96,12 +96,22 @@ function drawBricks() {
             var arrayIndex = rowColToArrayIndex(eachCol, eachRow);
 
 
-            if(bricks[arrayIndex]) {
+            if(bricks[arrayIndex] == 1) {
                 // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
-                ctx.drawImage(brickPic, brickLeftEdgeX, brickTopEdgeY);
-               
-                
+                ctx.drawImage(brick1Pic, brickLeftEdgeX, brickTopEdgeY);               
             } 
+
+            if(bricks[arrayIndex] == 2) {
+                // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
+                ctx.drawImage(brick2Pic, brickLeftEdgeX, brickTopEdgeY);               
+            } 
+
+            if(bricks[arrayIndex] == 3) {
+                // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
+                ctx.drawImage(brick3Pic, brickLeftEdgeX, brickTopEdgeY);               
+            } 
+            
+            
             
 
             brickLeftEdgeX += BRICK_WIDTH; 

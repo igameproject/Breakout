@@ -101,8 +101,8 @@ function ballBrickHandling() {
     
     if(ballBrickCol >= 0 && ballBrickCol < BRICK_COLS && ballBrickRow >= 0 && ballBrickRow < BRICK_ROWS) {
         let brickIndexUnderBall = rowColToArrayIndex(ballBrickCol, ballBrickRow);
-        if(bricks[brickIndexUnderBall]) {
-            bricks[brickIndexUnderBall] = 0;
+        if(bricks[brickIndexUnderBall] > 0) {
+            bricks[brickIndexUnderBall] --;
             bricksLeft--;
             
             chainBounce ? score += 20 : score += 10;
@@ -112,7 +112,7 @@ function ballBrickHandling() {
                 bonusLifeEligible = false;
             }
 
-            ballSpeedIncrement(0.06);
+            ballSpeedIncrement(0.04);
             chainBounce = true;
             ballWallSound.play();
 

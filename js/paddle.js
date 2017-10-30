@@ -1,6 +1,6 @@
 // Paddle Properties
-const PADDLE_WIDTH = 100;
-const PADDLE_HEIGHT = 20;
+const PADDLE_WIDTH = 110;
+const PADDLE_HEIGHT = 22;
 const PADDLE_XV = 12;
 const PADDLE_GAP = 10;
 const PADDLE_Y = canvas.height - PADDLE_HEIGHT - PADDLE_GAP;

@@ -1,4 +1,6 @@
-var brickPic=document.createElement("img");
+var brick1Pic=document.createElement("img");
+var brick2Pic=document.createElement("img");
+var brick3Pic=document.createElement("img");
 var paddlePic=document.createElement("img");
 var ballPic=document.createElement("img");
 var skyPic=document.createElement("img");
@@ -24,7 +26,10 @@ function loadImages() {
   var imageList = [
     {varName:ballPic, theFile:"ball.png"},
     {varName:paddlePic, theFile:"paddle.png"},
-    {varName:brickPic, theFile:"brick.png"},
+    {varName:brick1Pic, theFile:"brick.png"},
+    {varName:brick2Pic, theFile:"brick2.png"},
+    {varName:brick3Pic, theFile:"brick3.png"},
+
     {varName:skyPic, theFile:"sky.png"},
     {varName:lifePic, theFile:"life.png"}
   ];
