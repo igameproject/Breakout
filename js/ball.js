@@ -1,8 +1,11 @@
 // Ball Properties
 const BALL_COLOR = 'white';
 const BALL_DIA = 20;
-let ball_XV = -5;
-let ball_YV = -5;
+const INITIAL_BALL_XV = -5;
+const INITIAL_BALL_YV = -5;
+
+let ball_XV = -INITIAL_BALL_XV;
+let ball_YV = -INITIAL_BALL_YV;
 let ball_Y = PADDLE_Y - BALL_DIA / 2;
 let ball_X = paddle_X + PADDLE_WIDTH / 2;
 //ball connected to player paddle
@@ -23,8 +26,8 @@ const updateBallPosition = () => {
 }
 
 const ballReset=() => {
-    ball_XV = -5;
-    ball_YV = -5;
+    ball_XV = -INITIAL_BALL_XV; ;
+    ball_YV = -INITIAL_BALL_YV ;
     ball_Y = PADDLE_Y - BALL_DIA / 2;
     ball_X = paddle_X + PADDLE_WIDTH / 2;
 }

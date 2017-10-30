@@ -11,19 +11,31 @@ const addHoldKeyListener = keyname => {
         if (code === keyname) {
             heldKeys[keyname] = false;
         }
-        if(code === "Space"){
-            if(ballplayerconnect){
-              ballplayerconnect = false;
+
+        if(ballplayerconnect){
+              // Change Speed of ball according to motion.
               if(heldKeys['ArrowLeft'] == true){
-                ball_XV = -5;
+                ball_XV = -INITIAL_BALL_XV ;
               }
               else if(heldKeys['ArrowRight'] == true){
-                ball_XV = 5;
+                ball_XV = INITIAL_BALL_XV ;
               }
               else{
-                ball_YV = -5;
+                ball_YV = -INITIAL_BALL_YV ;
               }
             }
-         }
+         
     });
 };
+
+const mouseClickHandle = () => {
+    if (gameOver){
+      gameOverReset();
+    }
+    
+    else {
+      if(ballplayerconnect){
+        ballplayerconnect = false;
+      }
+    }  
+}

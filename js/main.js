@@ -11,11 +11,7 @@ let score = 0;
 window.onload = () => {
     addHoldKeyListener('ArrowLeft');
     addHoldKeyListener('ArrowRight');
-
-    addEventListener('mousedown', () => {
-        if (gameOver == true) gameOverReset();
-    });
-
+    addEventListener('mousedown', mouseClickHandle);
     const FRAMES_PER_SECOND = 50;
     setInterval(mainGame, 1000 / FRAMES_PER_SECOND);
 };

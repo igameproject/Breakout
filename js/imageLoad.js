@@ -1,5 +1,7 @@
-var carPic=document.createElement("img");
-var car2Pic=document.createElement("img");
+var brick=document.createElement("img");
+var paddle=document.createElement("img");
+var ball=document.createElement("img");
+
 var trackPics = [];
 
 var picsToLoad = 0;

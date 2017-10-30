@@ -32,8 +32,7 @@ let bricksLeft = countBricks();
 
 
 const mainGame = () => {
-    if(!gameOver) {
-        console.log(bricksLeft);
+    if(!gameOver) { 
         updatePaddlePosition();
         colorRect(0, 0, canvas.width, canvas.height,BG_COLOR);
         colorRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT,PADDLE_COLOR);
