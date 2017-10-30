@@ -13,6 +13,9 @@ let ballplayerconnect = true;
 let chainBounce = false;
 let bonusLifeEligible = true;
 
+let ballPaddleHitSound = new soundOverlapsClass("audio/hit");
+let ballWallSound = new soundOverlapsClass("audio/wall");
+let ballMissSound = new soundOverlapsClass("audio/miss");
 
 
 const updateBallPosition = () => {
@@ -54,9 +57,12 @@ const ballMove = () => {
     if(ball_Y > canvas.height) { // bottom
         if(numLives > 1){
             numLives--;
+            ballMissSound.play();
             lifeLossReset();
+
         }
         else{
+            ballMissSound.play();
             gameOver = true;
             status = "You are Dead";
         }
@@ -80,6 +86,7 @@ const ballPaddleHandling = () => {
         ball_XV = ballDistFromPaddleCenterX * 0.3;
         ballSpeedIncrement(0.06);
         chainBounce = false;
+        ballPaddleHitSound.play();
 
     } // ball center inside paddle
 } // end of ballPaddleHandling
@@ -107,6 +114,7 @@ function ballBrickHandling() {
 
             ballSpeedIncrement(0.06);
             chainBounce = true;
+            ballWallSound.play();
 
             if(bricksLeft == 0) {
                 goToNextLevel();
