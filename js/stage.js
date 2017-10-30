@@ -99,7 +99,7 @@ function drawBricks() {
             if(bricks[arrayIndex]) {
                 // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
                 ctx.drawImage(brickPic, brickLeftEdgeX, brickTopEdgeY);
-                console.log(brickLeftEdgeX + ","+ brickTopEdgeY);
+               
                 
             } 
             

@@ -19,6 +19,8 @@ const loadingDoneSoStartGame = () => {
 	  // these next few lines set up our game logic and render to happen 30 times per second
 	  const FRAMES_PER_SECOND = 50;
       setInterval(mainGame, 1000 / FRAMES_PER_SECOND);
+      setInterval(ballSpeedIncrement(0.03), 1000);
+
 };
 
 

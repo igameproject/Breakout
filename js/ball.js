@@ -76,6 +76,7 @@ const ballPaddleHandling = () => {
         let centerOfPaddleX = paddle_X + PADDLE_WIDTH/2;
         let ballDistFromPaddleCenterX = ball_X - centerOfPaddleX;
         ball_XV = ballDistFromPaddleCenterX * 0.3;
+        ballSpeedIncrement(0.06);
 
     } // ball center inside paddle
 } // end of ballPaddleHandling
@@ -86,7 +87,7 @@ const ballPaddleHandling = () => {
 function ballBrickHandling() {
     let ballBrickCol = Math.floor(ball_X / (BRICK_WIDTH )) ;
     let ballBrickRow = Math.floor(ball_Y / (BRICK_HEIGHT )) ;
-    // console.log(ballBrickRow + ',' + ballBrickCol);
+    
     
     if(ballBrickCol >= 0 && ballBrickCol < BRICK_COLS && ballBrickRow >= 0 && ballBrickRow < BRICK_ROWS) {
         let brickIndexUnderBall = rowColToArrayIndex(ballBrickCol, ballBrickRow);
@@ -94,7 +95,7 @@ function ballBrickHandling() {
             bricks[brickIndexUnderBall] = 0;
             bricksLeft--;
             score += 20;
-
+            ballSpeedIncrement(0.06);
 
             if(bricksLeft == 0) {
                 goToNextLevel();
@@ -129,3 +130,26 @@ function ballBrickHandling() {
     } // end of valid col and row
 } // end of ballBrickHandling func
 
+const ballSpeedIncrement = (inc) => {
+
+    if(!ballplayerconnect){
+
+        if(ball_XV < 0){
+        ball_XV -= inc;
+        }
+
+        if( ball_XV >= 0){
+            ball_XV += inc;
+        }
+
+        if( ball_YV < 0){
+            ball_YV -= inc;
+        }
+
+        if( ball_YV >= 0){
+            ball_YV += inc;
+        }
+
+    }
+    
+}
