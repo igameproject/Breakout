@@ -23,7 +23,7 @@ let  bricks = levels[level].slice();
 const countBricks = () => {
     let brickCount = 0;
     for(var i=0;i<bricks.length;i++){
-        if(bricks[i]) brickCount++;  
+        if(bricks[i]) brickCount++;
     }
     return brickCount;
 }
@@ -37,7 +37,7 @@ let bricksLeft = countBricks();
 
 
 const mainGame = () => {
-    if(!gameOver) { 
+    if(!gameOver) {
         // colorRect(0, 0, canvas.width, canvas.height,BG_COLOR);
         ctx.drawImage(skyPic, 0, 0);
         drawBricks();
@@ -50,7 +50,7 @@ const mainGame = () => {
         // drawBall(ball_X,ball_Y, BALL_DIA / 2, BALL_COLOR);
         ctx.drawImage(ballPic, ball_X - BALL_DIA / 2, ball_Y - BALL_DIA / 2);
         // colorText('Lives : ' + numLives,canvas.width - 20,30,"white",'16px Arial',"right");
-        
+
         let lifePicOffset = 0
         for(var i = 0; i < numLives ; i++){
 
@@ -62,7 +62,7 @@ const mainGame = () => {
 
         colorText('Score : ' + score ,20,30,"white",'16px Arial');
         colorText('Level : ' + (level + 1 ) ,canvas.width/2,30,"white",'16px Arial','center');
-        
+
 
     }
     else {
@@ -85,11 +85,11 @@ function drawBricks() {
 
     var brickLeftEdgeX = 0;
     var brickTopEdgeY = 0;
-   
+
     for(var eachRow=0;eachRow<BRICK_ROWS;eachRow++) {
 
         brickLeftEdgeX = 0;
-        
+
         for(var eachCol=0;eachCol<BRICK_COLS;eachCol++) {
 
 
@@ -98,30 +98,33 @@ function drawBricks() {
 
             if(bricks[arrayIndex] == 1) {
                 // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
-                ctx.drawImage(brick1Pic, brickLeftEdgeX, brickTopEdgeY);               
-            } 
+                ctx.drawImage(brick1Pic, brickLeftEdgeX, brickTopEdgeY);
+            }
 
             if(bricks[arrayIndex] == 2) {
                 // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
-                ctx.drawImage(brick2Pic, brickLeftEdgeX, brickTopEdgeY);               
-            } 
+                ctx.drawImage(brick2Pic, brickLeftEdgeX, brickTopEdgeY);
+            }
 
             if(bricks[arrayIndex] == 3) {
                 // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
-                ctx.drawImage(brick3Pic, brickLeftEdgeX, brickTopEdgeY);               
-            } 
-            
-            
-            
+                ctx.drawImage(brick3Pic, brickLeftEdgeX, brickTopEdgeY);
+            }
 
-            brickLeftEdgeX += BRICK_WIDTH; 
-        } 
+            if(bricks[arrayIndex] == 4) {
+                // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
+                ctx.drawImage(cannonPowerupPic, brickLeftEdgeX, brickTopEdgeY);
+            }
+
+
+            brickLeftEdgeX += BRICK_WIDTH;
+        }
 
         brickTopEdgeY += BRICK_HEIGHT;
 
-    
-    } 
-}; 
+
+    }
+};
 
 
 
@@ -137,7 +140,7 @@ function isBrickAtColRow(col, row) {
 const lifeLossReset = () => {
     ballReset();
     gameOver = false;
-    ballplayerconnect = true;     
+    ballplayerconnect = true;
 }; //gameReset
 
 
@@ -147,7 +150,7 @@ const gameOverReset = () => {
     lifeLossReset();
     numLives = LIVES;
     level = 0;
-    score = 0; 
+    score = 0;
 };
 
 
@@ -164,4 +167,3 @@ const initializeBricks = () => {
     bricks = levels[level].slice();
     bricksLeft = countBricks();
 }
-

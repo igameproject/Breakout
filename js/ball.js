@@ -12,6 +12,10 @@ let ball_X = paddle_X + PADDLE_WIDTH / 2;
 let ballplayerconnect = true;
 let chainBounce = false;
 let bonusLifeEligible = true;
+let ballDamage = 1;
+let DAMAGE_BUFF = 5;
+let cannonPowerupuses = 0;
+let MAX_USES = 10;
 
 let ballPaddleHitSound = new soundOverlapsClass("audio/hit");
 let ballWallSound = new soundOverlapsClass("audio/wall");
@@ -22,7 +26,7 @@ const updateBallPosition = () => {
     if(ballplayerconnect){
       ball_Y = PADDLE_Y - 10;
       ball_X = paddle_X + (PADDLE_WIDTH/2);
-    } 
+    }
     else {
         ballMove();
         ballBrickHandling();
@@ -97,16 +101,28 @@ const ballPaddleHandling = () => {
 function ballBrickHandling() {
     let ballBrickCol = Math.floor(ball_X / (BRICK_WIDTH )) ;
     let ballBrickRow = Math.floor(ball_Y / (BRICK_HEIGHT )) ;
-    
-    
+
+
     if(ballBrickCol >= 0 && ballBrickCol < BRICK_COLS && ballBrickRow >= 0 && ballBrickRow < BRICK_ROWS) {
         let brickIndexUnderBall = rowColToArrayIndex(ballBrickCol, ballBrickRow);
         if(bricks[brickIndexUnderBall] > 0) {
-            bricks[brickIndexUnderBall] --;
+            // Handle powerup 1 ball damage increase
+            if(bricks[brickIndexUnderBall] === 4) {
+              bricks[brickIndexUnderBall] = 0;
+              ballDamage = DAMAGE_BUFF;
+              cannonPowerupuses = MAX_USES;
+            } else {
+              if (cannonPowerupuses > 0) {
+                cannonPowerupuses--;
+              } else {
+                ballDamage = 1; // reset to default
+              }
+              bricks[brickIndexUnderBall] -= ballDamage;
+            }
             bricksLeft--;
-            
+
             chainBounce ? score += 20 : score += 10;
-            
+
             if(score >= 10000 && bonusLifeEligible){
                 numLives += 1;
                 bonusLifeEligible = false;
@@ -170,5 +186,5 @@ const ballSpeedIncrement = (inc) => {
         }
 
     }
-    
+
 }
