@@ -14,7 +14,7 @@ const BRICK_ROWS = 12;
 
 
 
-let level = 1;
+let level = 0;
 let  bricks = levels[level].slice();
 
 
