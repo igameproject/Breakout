@@ -12,6 +12,12 @@ window.onload = () => {
     addHoldKeyListener('ArrowLeft');
     addHoldKeyListener('ArrowRight');
     addEventListener('mousedown', mouseClickHandle);
+     addEventListener('keydown', (evt) => {
+       if(evt.key == 'n'){
+       		level++;
+       		bricks = levels[level].slice();
+       }
+    });
     loadImages();
 };
 
