@@ -84,7 +84,7 @@ const ballPaddleHandling = () => {
         let centerOfPaddleX = paddle_X + PADDLE_WIDTH/2;
         let ballDistFromPaddleCenterX = ball_X - centerOfPaddleX;
         ball_XV = ballDistFromPaddleCenterX * 0.3;
-        ballSpeedIncrement(0.06);
+        ballSpeedIncrement(0.04);
         chainBounce = false;
         ballPaddleHitSound.play();
 
@@ -94,7 +94,7 @@ const ballPaddleHandling = () => {
 
 
 
-function ballBrickHandling() {
+const ballBrickHandling = () => {
     let ballBrickCol = Math.floor(ball_X / (BRICK_WIDTH )) ;
     let ballBrickRow = Math.floor(ball_Y / (BRICK_HEIGHT )) ;
     
@@ -112,9 +112,35 @@ function ballBrickHandling() {
                 bonusLifeEligible = false;
             }
 
-            ballSpeedIncrement(0.04);
+            ballSpeedIncrement(0.02);
             chainBounce = true;
             ballWallSound.play();
+
+            // var random = Math.floor(Math.random() * 10);
+            // if(random < 2){
+            //     let decideWhichPowerup = Math.ceil(Math.random() * 5);
+            //     let powerup;
+            //     switch(decideWhichPowerup){
+            //         case 1:
+            //             powerup = new Powerup(ball_X,ball_Y,cannonPowerupPic);
+            //             break;
+            //         case 2:
+            //             powerup = new Powerup(ball_X,ball_Y,cannonPowerupPic);
+            //             break;
+            //         case 3:
+            //             powerup = new Powerup(ball_X,ball_Y,cannonPowerupPic);
+            //             break;
+            //         case 4:
+            //             powerup = new Powerup(ball_X,ball_Y,cannonPowerupPic);
+            //             break;
+            //         case 5:
+            //             powerup = new Powerup(ball_X,ball_Y,cannonPowerupPic);
+            //             break;
+            //     }
+                
+            // }
+
+
 
             if(bricksLeft == 0) {
                 goToNextLevel();
