@@ -4,11 +4,8 @@
 
 
 const BRICK_COLOR = '#1eddff';
-const BRICK_HEIGHT = 27;
-const BRICK_WIDTH = 81 ;
-
-// const BRICK_HEIGHT = 16 ;
-// const BRICK_WIDTH = 48 ;
+const BRICK_HEIGHT = 23;
+const BRICK_WIDTH = 71 ;
 
 const BRICK_GAP = 2;
 const BRICK_COLS = 16;
@@ -17,8 +14,9 @@ const BRICK_ROWS = 12;
 
 
 
-let level = 0 ;
+let level = 1;
 let  bricks = levels[level].slice();
+
 
 const countBricks = () => {
     let brickCount = 0;
