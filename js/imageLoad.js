@@ -37,7 +37,6 @@ function loadImages() {
     {varName:brick3Pic, theFile:"brick3.png"},
     {varName:skyPic, theFile:"sky.png"},
     {varName:lifePic, theFile:"life.png"},
-
     {varName:cannonPowerupPic, theFile:"cannonPowerup.png"},
     {varName:extraScorePowerupPic, theFile:"extraScorePowerup.png"},
     {varName:multiBallPowerupPic, theFile:"multiBallPowerup.png"},

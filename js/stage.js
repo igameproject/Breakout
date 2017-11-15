@@ -2,8 +2,6 @@
 //These will be set of coordinates which will be displayed via loop
 //Different levels can be loaded based on this map which will be stored in different file
 
-
-const BRICK_COLOR = '#1eddff';
 const BRICK_HEIGHT = 23;
 const BRICK_WIDTH = 71 ;
 
@@ -11,11 +9,9 @@ const BRICK_GAP = 2;
 const BRICK_COLS = 16;
 const BRICK_ROWS = 12;
 
-
-
-
 let level = 0;
 let  bricks = levels[level].slice();
+let ball = new Ball();
 
 
 const countBricks = () => {
@@ -36,25 +32,41 @@ let bricksLeft = countBricks();
 
 const mainGame = () => {
     if(!gameOver) { 
-        // colorRect(0, 0, canvas.width, canvas.height,BG_COLOR);
+   
         ctx.drawImage(skyPic, 0, 0);
         drawBricks();
         updatePaddlePosition();
-        // colorRect(paddle_X, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT,PADDLE_COLOR);
         ctx.drawImage(paddlePic, paddle_X, PADDLE_Y);
 
 
-        updateBallPosition();
-        // drawBall(ball_X,ball_Y, BALL_DIA / 2, BALL_COLOR);
-        ctx.drawImage(ballPic, ball_X - BALL_DIA / 2, ball_Y - BALL_DIA / 2);
-        // colorText('Lives : ' + numLives,canvas.width - 20,30,"white",'16px Arial',"right");
+        ball.updateBallPosition();
+       
+        ctx.drawImage(ballPic, ball.x - BALL_DIA / 2, ball.y - BALL_DIA / 2);
         
+
+        //powerup display
+
+        if(powerups.length > 0){
+
+            //draw it.
+            for(var i = 0 ;i < powerups.length; i++){
+                if(!powerups[i].useless){
+                    powerups[i].move();
+                }
+                else if(powerups[i].useless){
+                    powerups.splice(i,1);
+                }
+                console.log(powerups);
+                
+            }
+        }
+        
+
         let lifePicOffset = 0
         for(var i = 0; i < numLives ; i++){
 
             ctx.drawImage(lifePic, canvas.width - 50 - lifePicOffset , 15);
             lifePicOffset += 30;
-
 
         }
 
@@ -73,6 +85,7 @@ const mainGame = () => {
 
 
 }
+
 
 function rowColToArrayIndex(col, row) {
     return col + BRICK_COLS * row;
@@ -133,7 +146,7 @@ function isBrickAtColRow(col, row) {
 }
 
 const lifeLossReset = () => {
-    ballReset();
+    ball.ballReset();
     gameOver = false;
     ballplayerconnect = true;     
 }; //gameReset
