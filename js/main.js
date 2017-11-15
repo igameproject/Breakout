@@ -17,6 +17,9 @@ window.onload = () => {
     addEventListener('keydown', (evt) => {
        if(evt.key == 'n'){
        		level++;
+          if(level > levels.length){
+            level = 0;
+          }
        		bricks = levels[level].slice();
        }
     });
