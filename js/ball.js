@@ -7,36 +7,36 @@ let ballplayerconnect = true;
 let ballPaddleHitSound = new soundOverlapsClass("audio/hit");
 let ballBrickSound = new soundOverlapsClass("audio/brick");
 let ballMissSound = new soundOverlapsClass("audio/miss");
-
+let stickyBall = false;
+let redBall = false;
+let multiBall = false;
+let bonusLifeEligible = true;
+let balls = [];
 
 class Ball{
     constructor(){
-        this.velocityX = INITIAL_BALL_XV;
-        this.velocityY = INITIAL_BALL_YV;
+        this.velocityX = INITIAL_BALL_XV ;
+        this.velocityY = INITIAL_BALL_YV ;
         this.y = PADDLE_Y - BALL_DIA / 2;
         this.x = paddle_X + PADDLE_WIDTH / 2;
         //ball connected to player paddle
         this.chainBounce = false;
-        this.bonusLifeEligible = true;
-        
-        
+        this.useless = false;        
     }
 
-    updateBallPosition(){
-        
+    updatePosition(){
         if(ballplayerconnect){
           this.y = PADDLE_Y - 10;
           this.x = paddle_X + (PADDLE_WIDTH/2);
         }
-
         else {
-            this.ballMove();
-            this.ballBrickHandling();
-            this.ballPaddleHandling();
+            this.move();
+            this.brickHandling();
+            this.paddleHandling();
         }
     }
 
-    ballReset(){
+    reset(){
         this.velocityX = INITIAL_BALL_XV; ;
         this.velocityY = INITIAL_BALL_YV ;
         this.y = PADDLE_Y - BALL_DIA / 2;
@@ -44,7 +44,7 @@ class Ball{
     }
 
 
-    ballMove(){
+    move(){
         this.x += this.velocityX;
         this.y += this.velocityY;
 
@@ -62,9 +62,15 @@ class Ball{
 
         if(this.y > canvas.height) { // bottom
             if(numLives > 1){
-                numLives--;
-                ballMissSound.play();
-                lifeLossReset();
+                if(balls.length == 1){
+                    numLives--;
+                    ballMissSound.play();
+                    lifeLossReset();
+                }
+                else{
+                    this.useless = true;
+                }
+                
 
             }
             else{
@@ -76,7 +82,7 @@ class Ball{
     }
 
 
-    ballPaddleHandling(){
+    paddleHandling(){
         let paddleTopEdgeY = PADDLE_Y - PADDLE_GAP;
         let paddleBottomEdgeY = PADDLE_Y + PADDLE_HEIGHT;
         let paddleLeftEdgeX = paddle_X;
@@ -86,14 +92,27 @@ class Ball{
             this.x > paddleLeftEdgeX && // right of the left side of paddle
             this.x < paddleRightEdgeX) { // left of the left side of paddle
 
-            this.velocityY *= -1;
+            scoreHandling();
 
-            let centerOfPaddleX = paddle_X + PADDLE_WIDTH/2;
-            let ballDistFromPaddleCenterX = this.x - centerOfPaddleX;
-            this.velocityX = ballDistFromPaddleCenterX * 0.3;
-            this.ballSpeedIncrement(0.04);
-            this.chainBounce = false;
-            ballPaddleHitSound.play();
+            if(!stickyBall){
+
+                this.velocityY *= -1;
+                let centerOfPaddleX = paddle_X + PADDLE_WIDTH/2;
+                let ballDistFromPaddleCenterX = this.x - centerOfPaddleX;
+                this.velocityX = ballDistFromPaddleCenterX * 0.3;
+                this.speedIncrement(0.04);
+                this.chainBounce = false;
+                ballPaddleHitSound.play();
+
+            }
+            else if(stickyBall){
+                
+                ballplayerconnect = true;
+                //Potential bug
+                balls[0].reset();
+
+            }
+
 
         } // ball center inside paddle
     } // end of ballPaddleHandling
@@ -101,7 +120,7 @@ class Ball{
 
 
 
-    ballBrickHandling(){
+    brickHandling(){
         let ballBrickCol = Math.floor(this.x / (BRICK_WIDTH )) ;
         let ballBrickRow = Math.floor(this.y / (BRICK_HEIGHT )) ;
         
@@ -109,23 +128,23 @@ class Ball{
         if(ballBrickCol >= 0 && ballBrickCol < BRICK_COLS && ballBrickRow >= 0 && ballBrickRow < BRICK_ROWS) {
             let brickIndexUnderBall = rowColToArrayIndex(ballBrickCol, ballBrickRow);
             if(bricks[brickIndexUnderBall] > 0) {
-                bricks[brickIndexUnderBall] --;
-                bricksLeft--;
+                bricks[brickIndexUnderBall]--;
+                
+                if(bricks[brickIndexUnderBall] == 0){
+                    bricksLeft--;
+                }
                 
                 this.chainBounce ? score += 20 : score += 10;
                 
-                if(score >= 10000 && this.bonusLifeEligible){
-                    numLives += 1;
-                    this.bonusLifeEligible = false;
-                }
+               scoreHandling();
 
-                this.ballSpeedIncrement(0.02);
+                this.speedIncrement(0.02);
                 this.chainBounce = true;
                 ballBrickSound.play();
 
                 var random = Math.floor(Math.random() * 10);
                 if(random > 2){
-                    let decideWhichPowerup = Math.ceil(Math.random() * 5);
+                    let decideWhichPowerup = Math.ceil(Math.random() * 6);
                     let powerup;
                     switch(decideWhichPowerup){
                         case 1:
@@ -143,6 +162,9 @@ class Ball{
                         case 5:
                             powerup = new Powerup(this.x,this.y,stickyBallPowerupPic,"stickyBall");
                             break;
+                        case 6:
+                            powerup = new Powerup(this.x,this.y,lifePic,"freeLife");
+                            break;                        
                     }
                     powerups.push(powerup);
                     powerup.move();
@@ -151,7 +173,7 @@ class Ball{
 
 
 
-                if(bricksLeft == 0) {
+                if(bricksLeft == 0 && numLives > 0) {
                     goToNextLevel();
                 } // out of bricks
 
@@ -162,29 +184,30 @@ class Ball{
 
                 let bothTestsFailed = true;
 
-                if(prevBrickCol != ballBrickCol) {
-                    if(isBrickAtColRow(prevBrickCol, ballBrickRow) == false) {
-                        this.velocityX *= -1;
-                        bothTestsFailed = false;
+                if(!redBall){
+                    if(prevBrickCol != ballBrickCol) {
+                        if(isBrickAtColRow(prevBrickCol, ballBrickRow) == false) {
+                            this.velocityX *= -1;
+                            bothTestsFailed = false;
+                        }
                     }
-                }
-                if(prevBrickRow != ballBrickRow) {
-                    if(isBrickAtColRow(ballBrickCol, prevBrickRow) == false) {
-                        this.velocityY *= -1;
-                        bothTestsFailed = false;
+                    if(prevBrickRow != ballBrickRow) {
+                        if(isBrickAtColRow(ballBrickCol, prevBrickRow) == false) {
+                            this.velocityY *= -1;
+                            bothTestsFailed = false;
+                        }
                     }
-                }
-
-                if(bothTestsFailed) { // armpit case, prevents ball from going through
-                    this.velocityX *= -1;
-                    this.velocityY *= -1;
+                    if(bothTestsFailed) { // armpit case, prevents ball from going through
+                            this.velocityX *= -1;
+                            this.velocityY *= -1;
+                    }
                 }
 
             } // end of brick found
         } // end of valid col and row
     } // end of ballBrickHandling func
 
-    ballSpeedIncrement(inc){
+    speedIncrement(inc){
 
         if(!ballplayerconnect){
 
@@ -207,7 +230,6 @@ class Ball{
         }
         
     }
-
 
 
 

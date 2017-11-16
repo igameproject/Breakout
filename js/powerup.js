@@ -5,7 +5,7 @@ class Powerup{
 		this.x = posX;
 		this.y = posY;
 		this.pic = powerupPic;
-		this.name - powerupName
+		this.name = powerupName;
 		this.speed = 2;
 		this.powerupCaught = false;
 		this.useless = false;
@@ -28,10 +28,12 @@ class Powerup{
 				this.y < paddleBottomEdgeY && //above the bottom of paddle
 		        this.x > paddleLeftEdgeX && // right of the left side of paddle
 		        this.x < paddleRightEdgeX) { // left of the left side of paddle
-						console.log("Giving you powerup");
+						
+						this.actionForPowerup();
 						this.powerupCaught = true;
 						this.useless = true; 
 						powerupSound.play();
+						
 						//delete that powerup from powerups array;
 
 		     }
@@ -43,18 +45,35 @@ class Powerup{
 		}
 
 		else{
-
 			this.useless = true;
-
-
-		}
-
-
-		
-
-		
+		}	
 	}
 
+	actionForPowerup(){
+		
+		if(this.name == "freeLife"){
+			numLives++;
+		}
+		if(this.name == "extraScore"){
+			score+=1000;
+		}
+		if(this.name == "stickyBall"){
+			stickyBall = true;
+			setTimeout(function(){stickyBall = false;},20000);
+		}
+		if(this.name == "redBall"){
+			redBall = true;
+			setTimeout(function(){redBall = false;},20000);
+		}
+		if(this.name == "cannon"){
+			cannon = true;
+			setTimeout(function(){cannon = false;},20000);
+		}
+ 		if(this.name == "multiBall"){
+			multiBall = true;
+			
+		}
 
-
+	}
 }
+

@@ -19,15 +19,22 @@ const mouseClickHandle = () => {
       gameOverReset();
     }
     
-    else {
-      if(ballplayerconnect){
-          ballplayerconnect = false;
+    else if(ballplayerconnect){
+          
+
           if(heldKeys['ArrowLeft'] == true){
-                ball.velocityX = INITIAL_BALL_XV ;
+                balls[0].velocityX = INITIAL_BALL_XV ;
               }
               else if(heldKeys['ArrowRight'] == true){
-                ball.velocityY = -INITIAL_BALL_XV ;
+                balls[0].velocityX = -INITIAL_BALL_XV ;
               }
-      }
+
+          ballplayerconnect = false;
     }  
+
+    if(cannon){
+      fireBullets = true;
+    }
 }
+
+

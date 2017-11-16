@@ -9,16 +9,25 @@ const BRICK_GAP = 2;
 const BRICK_COLS = 16;
 const BRICK_ROWS = 12;
 
+const CANNON_WIDTH = 15;
+const CANNON_HEIGHT = 50;
+
+
+let cannon = false;
+let fireBullets = false;
+
+
 let level = 0;
 let  bricks = levels[level].slice();
-let ball = new Ball();
 
+balls.push(new Ball())
 
 const countBricks = () => {
     let brickCount = 0;
     for(var i=0;i<bricks.length;i++){
         if(bricks[i]) brickCount++;  
     }
+    console.log(brickCount)
     return brickCount;
 }
 
@@ -26,9 +35,6 @@ const countBricks = () => {
 
 // let bricksLeft = levelBricksCount[level]
 let bricksLeft = countBricks();
-
-
-
 
 const mainGame = () => {
     if(!gameOver) { 
@@ -38,14 +44,40 @@ const mainGame = () => {
         updatePaddlePosition();
         ctx.drawImage(paddlePic, paddle_X, PADDLE_Y);
 
+        if(multiBall && balls.length == 1){
+            let ball1 = new Ball();
+            let ball2 = new Ball();            
+            balls.push(ball1);
+            balls.push(ball2);
+            console.log(balls);
 
-        ball.updateBallPosition();
-       
-        ctx.drawImage(ballPic, ball.x - BALL_DIA / 2, ball.y - BALL_DIA / 2);
-        
+            for(var i = 1; i <= 2; i++){
+                balls[i].velocityX = balls[0].velocityX  + (Math.ceil(Math.random() * 3) - Math.ceil(Math.random() * 3))
+                balls[i].velocityY = balls[0].velocityX  + (Math.ceil(Math.random() * 3) - Math.ceil(Math.random() * 3))
+                balls[i].x = balls[0].x;
+                balls[i].y = balls[0].y;
+            }
+
+            multiBall = false;
+        }
+
+        //displaying all balls.
+        for(var i = 0; i < balls.length; i++ ){
+            if(!balls[i].useless){
+                balls[i].updatePosition();
+                if(redBall){
+                    ctx.drawImage(redBallPic, balls[i].x - BALL_DIA / 2, balls[i].y - BALL_DIA / 2);
+                }
+                else{
+                    ctx.drawImage(ballPic, balls[i].x - BALL_DIA / 2, balls[i].y - BALL_DIA / 2);
+                }
+            }
+            else{
+                balls.splice(i,1);
+            }            
+        }
 
         //powerup display
-
         if(powerups.length > 0){
 
             //draw it.
@@ -56,10 +88,25 @@ const mainGame = () => {
                 else if(powerups[i].useless){
                     powerups.splice(i,1);
                 }
-                console.log(powerups);
+                
                 
             }
         }
+
+        if(cannon){
+            ctx.drawImage(cannonPic, paddle_X + PADDLE_WIDTH/4, PADDLE_Y - CANNON_HEIGHT);
+        }
+
+        if(fireBullets && bullets.length < 1){
+            bullets.push(new Bullet());
+            fireBullets = false;
+        }
+
+        if(bullets.length == 1){
+            bullets[0].draw();
+        }
+
+
         
 
         let lifePicOffset = 0
@@ -108,23 +155,16 @@ function drawBricks() {
 
 
             if(bricks[arrayIndex] == 1) {
-                // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
                 ctx.drawImage(brick1Pic, brickLeftEdgeX, brickTopEdgeY);               
             } 
 
-            if(bricks[arrayIndex] == 2) {
-                // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
+            if(bricks[arrayIndex] == 2) {               
                 ctx.drawImage(brick2Pic, brickLeftEdgeX, brickTopEdgeY);               
             } 
 
-            if(bricks[arrayIndex] == 3) {
-                // colorRect(BRICK_WIDTH*eachCol ,BRICK_HEIGHT*eachRow ,BRICK_WIDTH-BRICK_GAP,BRICK_HEIGHT-BRICK_GAP, 'cyan');
+            if(bricks[arrayIndex] == 3) {                
                 ctx.drawImage(brick3Pic, brickLeftEdgeX, brickTopEdgeY);               
             } 
-            
-            
-            
-
             brickLeftEdgeX += BRICK_WIDTH; 
         } 
 
@@ -146,7 +186,7 @@ function isBrickAtColRow(col, row) {
 }
 
 const lifeLossReset = () => {
-    ball.ballReset();
+    balls[0].reset();
     gameOver = false;
     ballplayerconnect = true;     
 }; //gameReset
@@ -174,5 +214,13 @@ const goToNextLevel = () => {
 const initializeBricks = () => {
     bricks = levels[level].slice();
     bricksLeft = countBricks();
+}
+
+const scoreHandling = () => {
+     if(score>= 10000 && bonusLifeEligible){
+        score++;
+        numLives += 1;
+        bonusLifeEligible = false;
+    }
 }
 
