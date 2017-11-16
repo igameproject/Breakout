@@ -69,12 +69,14 @@ class Ball{
                 else{
                     this.useless = true;
                 }
+
             }
             else{
                 ballMissSound.play();
                 gameOver = true;
                 status = "You are Dead";
             }
+
         }
     }
 
@@ -113,9 +115,6 @@ class Ball{
 
         } // ball center inside paddle
     } // end of ballPaddleHandling
-
-
-
 
     brickHandling(){
         //have to take into consideration how ball is travelling left to right,r
@@ -229,6 +228,7 @@ class Ball{
             if( this.velocityX >= 0){
                 this.velocityX += inc;
             }
+
 
             if( this.velocityY < 0){
                 this.velocityY -= inc;

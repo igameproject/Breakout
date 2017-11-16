@@ -55,6 +55,7 @@ class Powerup{
 		}
 		if(this.name == "stickyBall"){
 			stickyBall = true;
+
 			setTimeout(function(){stickyBall = false;},16000);
 		}
 		if(this.name == "redBall"){
@@ -64,6 +65,7 @@ class Powerup{
 		if(this.name == "cannon"){
 			cannon = true;
 			setTimeout(function(){cannon = false;},16000);
+
 		}
  		if(this.name == "multiBall"){
 			multiBall = true;
