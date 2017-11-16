@@ -1,5 +1,6 @@
 powerups = [];
 let powerupSound = new soundOverlapsClass("audio/powerup");
+
 class Powerup{
 	constructor(posX,posY,powerupPic,powerupName){
 		this.x = posX;
@@ -33,17 +34,12 @@ class Powerup{
 						this.powerupCaught = true;
 						this.useless = true; 
 						powerupSound.play();
-						
-						//delete that powerup from powerups array;
-
 		     }
 		     if(!this.powerupCaught){
 		     	this.y = this.y + this.speed;
 				this.draw();
 		     }
-			
 		}
-
 		else{
 			this.useless = true;
 		}	

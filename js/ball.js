@@ -43,7 +43,6 @@ class Ball{
         this.x = paddle_X + PADDLE_WIDTH / 2;
     }
 
-
     move(){
         this.x += this.velocityX;
         this.y += this.velocityY;
@@ -70,8 +69,6 @@ class Ball{
                 else{
                     this.useless = true;
                 }
-                
-
             }
             else{
                 ballMissSound.play();
@@ -122,28 +119,21 @@ class Ball{
 
     brickHandling(){
         let ballBrickCol = Math.floor(this.x / (BRICK_WIDTH )) ;
-        let ballBrickRow = Math.floor(this.y / (BRICK_HEIGHT )) ;
-        
-        
+        let ballBrickRow = Math.floor(this.y / (BRICK_HEIGHT )) ;        
         if(ballBrickCol >= 0 && ballBrickCol < BRICK_COLS && ballBrickRow >= 0 && ballBrickRow < BRICK_ROWS) {
             let brickIndexUnderBall = rowColToArrayIndex(ballBrickCol, ballBrickRow);
             if(bricks[brickIndexUnderBall] > 0) {
                 bricks[brickIndexUnderBall]--;
-                
                 if(bricks[brickIndexUnderBall] == 0){
                     bricksLeft--;
                 }
-                
                 this.chainBounce ? score += 20 : score += 10;
-                
-               scoreHandling();
-
+                scoreHandling();
                 this.speedIncrement(0.02);
                 this.chainBounce = true;
                 ballBrickSound.play();
-
-                var random = Math.floor(Math.random() * 10);
-                if(random > 2){
+                let random = Math.floor(Math.random() * 10);
+                if(random == 0){
                     let decideWhichPowerup = Math.ceil(Math.random() * 6);
                     let powerup;
                     switch(decideWhichPowerup){
@@ -170,9 +160,6 @@ class Ball{
                     powerup.move();
                     
                 }
-
-
-
                 if(bricksLeft == 0 && numLives > 0) {
                     goToNextLevel();
                 } // out of bricks
@@ -181,7 +168,6 @@ class Ball{
                 let prevBallY = this.y - this.velocityY;
                 let prevBrickCol = Math.floor(prevBallX / BRICK_WIDTH);
                 let prevBrickRow = Math.floor(prevBallY / BRICK_HEIGHT);
-
                 let bothTestsFailed = true;
 
                 if(!redBall){
@@ -202,7 +188,6 @@ class Ball{
                             this.velocityY *= -1;
                     }
                 }
-
             } // end of brick found
         } // end of valid col and row
     } // end of ballBrickHandling func
@@ -210,7 +195,6 @@ class Ball{
     speedIncrement(inc){
 
         if(!ballplayerconnect){
-
             if(this.velocityX < 0){
             this.velocityX -= inc;
             }
@@ -230,7 +214,4 @@ class Ball{
         }
         
     }
-
-
-
 }

@@ -6,7 +6,7 @@ const LIVES = 3;
 let numLives = LIVES;
 let gameOver = false; 
 let status;
-let score = 10000;
+let score = 0;
 
 
 window.onload = () => {
@@ -37,7 +37,7 @@ const loadingDoneSoStartGame = () => {
 	  // these next few lines set up our game logic and render to happen 30 times per second
 	    const FRAMES_PER_SECOND = 50;
       setInterval(mainGame, 1000 / FRAMES_PER_SECOND);
-       for(var i = 0; i < balls.length; i++ ){
+       for(let i = 0; i < balls.length; i++ ){
              setInterval(balls[i].speedIncrement(0.03), 1000)
         }
        

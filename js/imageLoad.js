@@ -19,19 +19,19 @@ let stickyBallPowerupPic=document.createElement("img");
 
 let picsToLoad = 0;
 
-function countLoadedImageAndLaunchIfReady() {
+const countLoadedImageAndLaunchIfReady = () => {
   picsToLoad--;
   if(picsToLoad == 0) { // last image loaded?
     loadingDoneSoStartGame();
   }
 }
 
-function beginLoadingImage(imgVar, fileName) {
+const beginLoadingImage = (imgVar, fileName) => {
   imgVar.onload=countLoadedImageAndLaunchIfReady;
   imgVar.src="images/"+fileName;
 }
 
-function loadImages() {
+const loadImages = () =>{
 
   let imageList = [
     {varName:ballPic, theFile:"ball.png"},

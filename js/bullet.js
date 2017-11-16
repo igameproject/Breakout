@@ -18,7 +18,6 @@ class Bullet{
 		else{
 			bullets.pop();
 		}
-		
 	}
 
 	draw(){
@@ -27,7 +26,7 @@ class Bullet{
 		colorRect(this.x, this.y, this.width, this.height, 'purple');
 	}
 
-	 brickHandling(){
+	brickHandling(){
         let ballBrickCol = Math.floor(this.x / (BRICK_WIDTH )) ;
         let ballBrickRow = Math.floor(this.y / (BRICK_HEIGHT )) ;
         
